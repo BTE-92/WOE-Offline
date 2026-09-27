@@ -1,0 +1,125 @@
+{
+  "Units": {
+    "Player Units": {
+      "Items": {
+        "Offroad Car": {
+          "OrderIndex": 0,
+          "Description": "This is a wacky vehicle!",
+          "ResearchCost": 100,
+          "ClassName": "OffroadCar",
+          "IconImage": "item_player_monster_car_icon",
+          "LevelRequirement": 0
+        },
+        "Neppis Car": {
+          "OrderIndex": 1,
+          "Description": "This is a wacky vehicle!",
+          "ResearchCost": 100,
+          "ClassName": "NeppisCar",
+          "LevelRequirement": 0
+        }
+      },
+      "CategoryType": "Player",
+      "Description": "These are player units"
+    },
+    "Props": {
+      "Items": {
+        "Wooden Crate": {
+          "OrderIndex": 0,
+          "Description": "Breaks when hit!",
+          "ResearchCost": 100,
+          "ClassName": "WoodenCrate",
+          "IconImage": "item_basic_crate_icon",
+          "LevelRequirement": 0
+        },
+        "Medium Plank": {
+          "OrderIndex": 1,
+          "Description": "Well... it's a plank.",
+          "ResearchCost": 100,
+          "ClassName": "MediumPlank",
+          "IconImage": "item_plank250_icon",
+          "LevelRequirement": 0
+        },
+        "Long Plank": {
+          "OrderIndex": 2,
+          "Description": "Well... it's a longer plank.",
+          "ResearchCost": 100,
+          "ClassName": "LongPlank",
+          "IconImage": "item_plank500_icon",
+          "LevelRequirement": 0
+        },
+        "Boost Ramp": {
+          "OrderIndex": 3,
+          "Description": "Boostrampendaali",
+          "ResearchCost": 100,
+          "ClassName": "SpeedRamp",
+          "IconImage": "item_boost_ramp_icon",
+          "LevelRequirement": 0
+        },
+        "Small Metal Platform": {
+          "OrderIndex": 4,
+          "Description": "Metallia, metallia",
+          "ResearchCost": 100,
+          "ClassName": "MetalPlatformSmall",
+          "IconImage": "item_metal_platform_small_icon",
+          "LevelRequirement": 0
+        },
+        "Medium Metal Platform": {
+          "OrderIndex": 5,
+          "Description": "Metallia, metallia",
+          "ResearchCost": 100,
+          "ClassName": "MetalPlatformMedium",
+          "IconImage": "item_metal_platform_medium_icon",
+          "LevelRequirement": 0
+        },
+        "Large Metal Platform": {
+          "OrderIndex": 6,
+          "Description": "Metallia, metallia",
+          "ResearchCost": 100,
+          "ClassName": "MetalPlatformLarge",
+          "IconImage": "item_metal_platform_large_icon",
+          "LevelRequirement": 0
+        },
+        "Crumbling Platform": {
+          "OrderIndex": 7,
+          "Description": "Hajoova",
+          "ResearchCost": 100,
+          "ClassName": "BreakingPlatform",
+          "IconImage": "item_crumbling_platform_medium_icon",
+          "LevelRequirement": 0
+        },
+        "Big Gear": {
+          "OrderIndex": 8,
+          "Description": "Ratas perkele",
+          "ResearchCost": 100,
+          "ClassName": "BigGear",
+          "IconImage": "item_gear_icon",
+          "LevelRequirement": 0
+        }
+      },
+      "CategoryType": "Unit",
+      "Description": "Some stuff to fill your level with."
+    },
+    "Dangerous Stuff": {
+      "Items": {
+        "Exploding Barrel": {
+          "OrderIndex": 0,
+          "Description": "Watch out!",
+          "ResearchCost": 100,
+          "ClassName": "ExplodingBarrel",
+          "IconImage": "item_exploding_barrel_icon",
+          "LevelRequirement": 0
+        },
+        "Dangerous Platform": {
+          "OrderIndex": 1,
+          "Description": "Watch out!",
+          "ResearchCost": 100,
+          "ClassName": "DangerPlatform",
+          "IconImage": "item_danger_platform_icon",
+          "LevelRequirement": 0
+        }
+      },
+      "CategoryType": "Unit",
+      "Description": "This stuff is DANGEROUS!"
+    }
+  }
+}

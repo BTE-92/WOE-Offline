@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: d414080a1aab7a24a87f5856d22edd77
+timeCreated: 1789915605
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 2
+  name:
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 1
+  characterPadding: 0
+  includeFontData: 1
+  use2xBehaviour: 0
+  fontNames:
+  - KG LET HER GO SOLID
+  - KGLetHerGo
+  customCharacters:
+  fontRenderingMode: 0
+  output:
+    hasEmptyFontData: 0
+  userData:

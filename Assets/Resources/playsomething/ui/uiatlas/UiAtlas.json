@@ -1,0 +1,468 @@
+{"frames": [
+
+{
+	"filename": "controller_arrow_left.psd",
+	"frame": {"x":692,"y":406,"w":136,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":136,"h":129},
+	"sourceSize": {"w":136,"h":129}
+},
+{
+	"filename": "controller_arrow_right.psd",
+	"frame": {"x":554,"y":406,"w":136,"h":129},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":136,"h":129},
+	"sourceSize": {"w":136,"h":129}
+},
+{
+	"filename": "controller_button_green.psd",
+	"frame": {"x":1724,"y":291,"w":131,"h":133},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":131,"h":133},
+	"sourceSize": {"w":131,"h":133}
+},
+{
+	"filename": "hud_button_draw_add.psd",
+	"frame": {"x":1793,"y":142,"w":147,"h":147},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":147,"h":147},
+	"sourceSize": {"w":147,"h":147}
+},
+{
+	"filename": "hud_button_draw_mode.psd",
+	"frame": {"x":1146,"y":406,"w":91,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":91,"h":90},
+	"sourceSize": {"w":91,"h":90}
+},
+{
+	"filename": "hud_button_draw_mode_active.psd",
+	"frame": {"x":1053,"y":406,"w":91,"h":90},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":91,"h":90},
+	"sourceSize": {"w":91,"h":90}
+},
+{
+	"filename": "hud_button_draw_sub.psd",
+	"frame": {"x":1581,"y":282,"w":141,"h":144},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":141,"h":144},
+	"sourceSize": {"w":141,"h":144}
+},
+{
+	"filename": "hud_button_edit.psd",
+	"frame": {"x":468,"y":419,"w":84,"h":84},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":84},
+	"sourceSize": {"w":84,"h":84}
+},
+{
+	"filename": "hud_button_exit.psd",
+	"frame": {"x":1239,"y":406,"w":87,"h":93},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":87,"h":93},
+	"sourceSize": {"w":87,"h":93}
+},
+{
+	"filename": "hud_button_material_danger.psd",
+	"frame": {"x":1614,"y":142,"w":177,"h":138},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":138},
+	"sourceSize": {"w":177,"h":138}
+},
+{
+	"filename": "hud_button_material_dirt.psd",
+	"frame": {"x":1402,"y":344,"w":177,"h":138},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":138},
+	"sourceSize": {"w":177,"h":138}
+},
+{
+	"filename": "hud_button_material_ice.psd",
+	"frame": {"x":1793,"y":2,"w":177,"h":138},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":138},
+	"sourceSize": {"w":177,"h":138}
+},
+{
+	"filename": "hud_button_material_metal.psd",
+	"frame": {"x":1614,"y":2,"w":177,"h":138},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":138},
+	"sourceSize": {"w":177,"h":138}
+},
+{
+	"filename": "hud_button_material_mud.psd",
+	"frame": {"x":1402,"y":204,"w":177,"h":138},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":177,"h":138},
+	"sourceSize": {"w":177,"h":138}
+},
+{
+	"filename": "hud_button_menu.psd",
+	"frame": {"x":1857,"y":390,"w":85,"h":74},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":85,"h":74},
+	"sourceSize": {"w":85,"h":74}
+},
+{
+	"filename": "hud_button_object_add.psd",
+	"frame": {"x":830,"y":406,"w":128,"h":128},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":128,"h":128},
+	"sourceSize": {"w":128,"h":128}
+},
+{
+	"filename": "hud_button_play.psd",
+	"frame": {"x":1944,"y":382,"w":59,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":59,"h":64},
+	"sourceSize": {"w":59,"h":64}
+},
+{
+	"filename": "hud_button_retry.psd",
+	"frame": {"x":1765,"y":426,"w":83,"h":81},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":83,"h":81},
+	"sourceSize": {"w":83,"h":81}
+},
+{
+	"filename": "hud_dropdown_background.psd",
+	"frame": {"x":468,"y":52,"w":84,"h":365},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":84,"h":365},
+	"sourceSize": {"w":84,"h":365}
+},
+{
+	"filename": "hud_gizmo_copy.psd",
+	"frame": {"x":1942,"y":302,"w":80,"h":78},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":78},
+	"sourceSize": {"w":80,"h":78}
+},
+{
+	"filename": "hud_gizmo_delete.psd",
+	"frame": {"x":1942,"y":222,"w":80,"h":78},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":78},
+	"sourceSize": {"w":80,"h":78}
+},
+{
+	"filename": "hud_gizmo_flip.psd",
+	"frame": {"x":1942,"y":142,"w":80,"h":78},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":78},
+	"sourceSize": {"w":80,"h":78}
+},
+{
+	"filename": "hud_gizmo_rotate.psd",
+	"frame": {"x":1675,"y":428,"w":88,"h":89},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":88,"h":89},
+	"sourceSize": {"w":88,"h":89}
+},
+{
+	"filename": "hud_gizmo_selection_circle.psd",
+	"frame": {"x":2,"y":52,"w":252,"h":252},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":252,"h":252},
+	"sourceSize": {"w":252,"h":252}
+},
+{
+	"filename": "hud_icon_exit.psd",
+	"frame": {"x":419,"y":456,"w":44,"h":47},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":47},
+	"sourceSize": {"w":44,"h":47}
+},
+{
+	"filename": "hud_icon_info.psd",
+	"frame": {"x":1972,"y":97,"w":43,"h":43},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":43,"h":43},
+	"sourceSize": {"w":43,"h":43}
+},
+{
+	"filename": "hud_icon_move.psd",
+	"frame": {"x":1328,"y":478,"w":36,"h":36},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":36},
+	"sourceSize": {"w":36,"h":36}
+},
+{
+	"filename": "hud_icon_new.psd",
+	"frame": {"x":1904,"y":466,"w":34,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":34,"h":46},
+	"sourceSize": {"w":34,"h":46}
+},
+{
+	"filename": "hud_icon_player.psd",
+	"frame": {"x":1850,"y":466,"w":52,"h":55},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":52,"h":55},
+	"sourceSize": {"w":52,"h":55}
+},
+{
+	"filename": "hud_icon_publish.psd",
+	"frame": {"x":483,"y":2,"w":46,"h":47},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":47},
+	"sourceSize": {"w":46,"h":47}
+},
+{
+	"filename": "hud_icon_rules.psd",
+	"frame": {"x":363,"y":456,"w":54,"h":52},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":54,"h":52},
+	"sourceSize": {"w":54,"h":52}
+},
+{
+	"filename": "hud_icon_save.psd",
+	"frame": {"x":1972,"y":2,"w":46,"h":46},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":46},
+	"sourceSize": {"w":46,"h":46}
+},
+{
+	"filename": "hud_icon_settings.psd",
+	"frame": {"x":1972,"y":50,"w":46,"h":45},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":46,"h":45},
+	"sourceSize": {"w":46,"h":45}
+},
+{
+	"filename": "hud_icon_themes.psd",
+	"frame": {"x":302,"y":456,"w":59,"h":52},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":59,"h":52},
+	"sourceSize": {"w":59,"h":52}
+},
+{
+	"filename": "hud_icon_timer.psd",
+	"frame": {"x":214,"y":388,"w":37,"h":52},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":37,"h":52},
+	"sourceSize": {"w":37,"h":52}
+},
+{
+	"filename": "hud_key_1.psd",
+	"frame": {"x":214,"y":456,"w":86,"h":74},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":86,"h":74},
+	"sourceSize": {"w":86,"h":74}
+},
+{
+	"filename": "hud_key_2.psd",
+	"frame": {"x":1581,"y":428,"w":92,"h":107},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":92,"h":107},
+	"sourceSize": {"w":92,"h":107}
+},
+{
+	"filename": "hud_key_3.psd",
+	"frame": {"x":1857,"y":291,"w":83,"h":97},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":83,"h":97},
+	"sourceSize": {"w":83,"h":97}
+},
+{
+	"filename": "hud_key_4.psd",
+	"frame": {"x":960,"y":406,"w":91,"h":98},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":91,"h":98},
+	"sourceSize": {"w":91,"h":98}
+},
+{
+	"filename": "hud_key_5.psd",
+	"frame": {"x":1328,"y":406,"w":71,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":71,"h":70},
+	"sourceSize": {"w":71,"h":70}
+},
+{
+	"filename": "hud_key_background.psd",
+	"frame": {"x":2,"y":2,"w":479,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":479,"h":48},
+	"sourceSize": {"w":479,"h":48}
+},
+{
+	"filename": "item_basic_crate_icon.psd",
+	"frame": {"x":1402,"y":2,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_boost_ramp_icon.psd",
+	"frame": {"x":1190,"y":204,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_crumbling_platform_medium_icon.psd",
+	"frame": {"x":1190,"y":2,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_danger_platform_icon.psd",
+	"frame": {"x":978,"y":204,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_exploding_barrel_icon.psd",
+	"frame": {"x":978,"y":2,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_gear_icon.psd",
+	"frame": {"x":766,"y":204,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_metal_platform_large_icon.psd",
+	"frame": {"x":766,"y":2,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_metal_platform_medium_icon.psd",
+	"frame": {"x":554,"y":204,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_metal_platform_small_icon.psd",
+	"frame": {"x":554,"y":2,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_plank250_icon.psd",
+	"frame": {"x":256,"y":254,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_plank500_icon.psd",
+	"frame": {"x":256,"y":52,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_player_monster_car_icon.psd",
+	"frame": {"x":2,"y":306,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "menu_icon_liked_off.psd",
+	"frame": {"x":214,"y":347,"w":40,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":39},
+	"sourceSize": {"w":40,"h":39}
+},
+{
+	"filename": "menu_icon_liked_on.psd",
+	"frame": {"x":214,"y":306,"w":40,"h":39},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":39},
+	"sourceSize": {"w":40,"h":39}
+},
+{
+	"filename": "menu_icon_played_off.psd",
+	"frame": {"x":1581,"y":240,"w":29,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":29,"h":34},
+	"sourceSize": {"w":29,"h":34}
+},
+{
+	"filename": "menu_icon_played_on.psd",
+	"frame": {"x":1581,"y":204,"w":29,"h":34},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":29,"h":34},
+	"sourceSize": {"w":29,"h":34}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "UiAtlasTex.png",
+	"format": "RGBA8888",
+	"size": {"w":2024,"h":537},
+	"scale": "0.5",
+	"smartupdate": "$TexturePacker:SmartUpdate:185fe3db437d471857c4a076c4ffa794:5a2960dfd2805c2d6acb5300dc81854a:0795606be9d50b8e65b97e336a13833e$"
+}
+}
