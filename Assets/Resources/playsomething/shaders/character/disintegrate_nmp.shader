@@ -47,7 +47,15 @@ SubShader {
 	// "addshadow" forces Unity to route the surf() clip() into the auto-generated
 	// ShadowCaster pass, which is exactly what the decompiled SHADOWCASTER pass does
 	// (it repeats the same noise-threshold discard before writing depth).
+	//
+	// "target 3.0" is required, not optional: without it Unity compiles at the
+	// default target 2.0 (Shader Model 2.0), which caps dependent texture reads at
+	// 4 per pixel shader. surf() alone samples 3 textures (_NoiseTex, _MainTex,
+	// _BumpMap); the Spot-light and point-light-cookie ForwardAdd variants need 2
+	// more (cookie + attenuation), landing at 5 and tripping the SM2.0 ceiling.
+	// Target 3.0 removes that cap without altering any sampling logic.
 	#pragma surface surf Lambert addshadow
+	#pragma target 3.0
 
 	sampler2D _MainTex;
 	sampler2D _BumpMap;
