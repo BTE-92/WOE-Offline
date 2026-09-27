@@ -4,7 +4,7 @@ This repo contains a decompilation for the oldest available beta version of the 
 
 The decompiled build in this repo is from a 2014 iOS TestFlight build of the game, which happens to be the only beta I could find.
 
-**Game version:** 0.4.0
+> **📦 Game Version: `0.4.0`**
 
 [Click here to download the IPA (32-bit)](https://archive.org/download/traplight-whatonearth/WhatOnEarth_%28com.traplight.whatonearth%29_0.4.0.ipa)
 
