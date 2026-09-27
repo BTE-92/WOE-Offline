@@ -1,8 +1,8 @@
 # What on Earth Decompiled
 
-This repo contains a decompilation for the oldest available beta version of the game **Big Bang Racing** by Traplight Games. The game was originally called **What on Earth**.
+This repo contains a decompilation for the earliest version of the game **Big Bang Racing** by Traplight Games. The game was originally called **What on Earth**.
 
-The decompiled build in this repo is from a 2014 iOS TestFlight build of the game, which happens to be the only beta I could find.
+The decompiled build in this repo is from a 2014 iOS TestFlight build of the game, which happens to be the only early build I could find.
 
 > **📦 Game Version: `0.4.0`**
 
