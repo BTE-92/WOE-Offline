@@ -22,6 +22,8 @@ The decompiled build in this repo is from a 2014 iOS TestFlight build of the gam
 
 * There are some possible enhancements to make (e.g. upgrading Unity or updating the FMOD version).
 
+* Some enhancements have been made to this source which includes: Adding mouse support, Adding a config file which generates on the persistent path to make server url changing easier.
+
 # Unity Setup
 
 For this project, I'd recommend using **Unity 4.7.2f1**, since that is the version I used. Later versions might cause compatibility issues, as well as opening the project in earlier versions.
