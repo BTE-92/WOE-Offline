@@ -5,6 +5,14 @@ using System.Collections.Generic;
 
 namespace UnityEngine
 {
+    [Flags]
+    public enum PushNotificationType
+    {
+        None = 0,
+        Badge = 1,
+        Sound = 2,
+        Alert = 4
+    }
     public enum LocalNotificationType
     {
         None = 0,
@@ -145,6 +153,11 @@ namespace UnityEngine
             {
                 _mockDeviceToken[i] = (byte)(i + 1);
             }
+        }
+
+        public static void RegisterForNotifications(PushNotificationType notificationTypes)
+        {
+            RegisterForRemoteNotificationTypes((RemoteNotificationType)(int)notificationTypes);
         }
 
         public static void UnregisterForRemoteNotifications()

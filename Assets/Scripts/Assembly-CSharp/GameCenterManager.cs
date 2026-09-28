@@ -21,35 +21,43 @@ public static class GameCenterManager
 
 	public static bool m_loginComplete;
 
-	public static void Login(Action _GCLoginComplete)
-	{
-		Social.localUser.Authenticate(delegate(bool success)
-		{
-			if (success)
-			{
-				Debug.Log("GC Login successful");
-				string message = "Username: " + Social.localUser.userName + "\nGC ID: " + Social.localUser.id + "\nIsUnderage: " + Social.localUser.underage;
-				Debug.Log(message);
-			}
-			else
-			{
-				Debug.Log("GC Login failed");
-			}
-			if (Social.localUser.authenticated)
-			{
-				PlayerPrefsX.SetGameCenterId(Social.localUser.id);
-				PlayerPrefsX.SetGameCenterName(Social.localUser.userName);
-			}
-			else
-			{
-				PlayerPrefsX.SetGameCenterId(null);
-			}
-			m_loginComplete = true;
-			_GCLoginComplete();
-		});
-	}
+    public static void Login(Action _GCLoginComplete)
+    {
+#if UNITY_IOS || UNITY_EDITOR
+        Social.localUser.Authenticate(delegate (bool success)
+        {
+            if (success)
+            {
+                Debug.Log("GC Login successful");
+                string message = "Username: " + Social.localUser.userName + "\nGC ID: " + Social.localUser.id + "\nIsUnderage: " + Social.localUser.underage;
+                Debug.Log(message);
+            }
+            else
+            {
+                Debug.Log("GC Login failed");
+            }
+            if (Social.localUser.authenticated)
+            {
+                PlayerPrefsX.SetGameCenterId(Social.localUser.id);
+                PlayerPrefsX.SetGameCenterName(Social.localUser.userName);
+            }
+            else
+            {
+                PlayerPrefsX.SetGameCenterId(null);
+            }
+            m_loginComplete = true;
+            _GCLoginComplete();
+        });
+#else
+        Debug.Log("GC Login skipped (Game Center is iOS only)");
+        PlayerPrefsX.SetGameCenterId(null);
+        PlayerPrefsX.DeleteKey("GameCenterName");
+        m_loginComplete = true;
+        _GCLoginComplete();
+#endif
+    }
 
-	public static void Logout()
+    public static void Logout()
 	{
 		Debug.Log("GC Logout");
 		PlayerPrefsX.DeleteKey("GameCenterId");
