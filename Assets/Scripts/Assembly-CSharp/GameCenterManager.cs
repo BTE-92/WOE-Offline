@@ -24,30 +24,30 @@ public static class GameCenterManager
     public static void Login(Action _GCLoginComplete)
     {
 #if UNITY_IOS || UNITY_EDITOR
-        Social.localUser.Authenticate(delegate (bool success)
-        {
-            if (success)
-            {
-                Debug.Log("GC Login successful");
-                string message = "Username: " + Social.localUser.userName + "\nGC ID: " + Social.localUser.id + "\nIsUnderage: " + Social.localUser.underage;
-                Debug.Log(message);
-            }
-            else
-            {
-                Debug.Log("GC Login failed");
-            }
-            if (Social.localUser.authenticated)
-            {
-                PlayerPrefsX.SetGameCenterId(Social.localUser.id);
-                PlayerPrefsX.SetGameCenterName(Social.localUser.userName);
-            }
-            else
-            {
-                PlayerPrefsX.SetGameCenterId(null);
-            }
-            m_loginComplete = true;
-            _GCLoginComplete();
-        });
+	Social.localUser.Authenticate(delegate(bool success)
+	{
+		if (success)
+		{
+			Debug.Log("GC Login successful");
+			string message = "Username: " + Social.localUser.userName + "\nGC ID: " + Social.localUser.id + "\nIsUnderage: " + Social.localUser.underage;
+			Debug.Log(message);
+		}
+		else
+		{
+			Debug.Log("GC Login failed");
+		}
+		if (Social.localUser.authenticated)
+		{
+			PlayerPrefsX.SetGameCenterId(Social.localUser.id);
+			PlayerPrefsX.SetGameCenterName(Social.localUser.userName);
+		}
+		else
+		{
+			PlayerPrefsX.SetGameCenterId(null);
+		}
+		m_loginComplete = true;
+		_GCLoginComplete();
+	});
 #else
         Debug.Log("GC Login skipped (Game Center is iOS only)");
         PlayerPrefsX.SetGameCenterId(null);

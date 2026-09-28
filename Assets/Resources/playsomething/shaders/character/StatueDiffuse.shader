@@ -67,26 +67,25 @@ Shader "Character/StatueDiffuse" {
                 v2f_base o;
                 UNITY_INITIALIZE_OUTPUT(v2f_base, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
-                o.worldPos.xyz = mul(_Object2World, v.vertex).xyz;
+                o.worldPos.xyz = mul(unity_ObjectToWorld, v.vertex).xyz;
 
                 // Reconstruct Tangent Space transformation matrix
                 TANGENT_SPACE_ROTATION;
 
-                // Reconstruct world basis projections in object space from bytecode rows
-                float3 worldXInObj = _Object2World[0].xyz;
-                float3 worldYInObj = _Object2World[1].xyz;
-                float3 worldZInObj = _Object2World[2].xyz;
+                // Reconstruct world basis projections in object space
+                float3 worldXInObj = unity_ObjectToWorld[0].xyz;
+                float3 worldYInObj = unity_ObjectToWorld[1].xyz;
+                float3 worldZInObj = unity_ObjectToWorld[2].xyz;
 
-                o.worldXTangent.xyz = mul(rotation, worldXInObj * unity_Scale.w);
-                o.worldYTangent.xyz = mul(rotation, worldYInObj * unity_Scale.w);
-                o.worldZTangent = mul(rotation, worldZInObj * unity_Scale.w);
+                o.worldXTangent.xyz = mul(rotation, worldXInObj);
+                o.worldYTangent.xyz = mul(rotation, worldYInObj);
+                o.worldZTangent = mul(rotation, worldZInObj);
 
                 // Tangent-space Light Direction
-                float3 objLightDir = mul(_World2Object, _WorldSpaceLightPos0).xyz;
-                float3 lightTangent = mul(rotation, objLightDir);
+                float3 lightTangent = mul(rotation, ObjSpaceLightDir(v.vertex));
 
                 // Pack lightTangent into .w components to fit under 8 interpolator limit
                 o.worldPos.w = lightTangent.x;
@@ -94,7 +93,7 @@ Shader "Character/StatueDiffuse" {
                 o.worldYTangent.w = lightTangent.z;
 
                 // Spherical Harmonics ambient evaluated at World Normal
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
 
                 TRANSFER_SHADOW(o);
@@ -115,9 +114,10 @@ Shader "Character/StatueDiffuse" {
                 worldNormal.z = dot(i.worldZTangent, normalTangent);
                 worldNormal = normalize(worldNormal);
 
-                // 3. Sharp triplanar blending calculations
+                // 3. Sharp triplanar blending calculations with zero-length guard
                 half3 blend = max(abs(worldNormal) - _Tighten, 0.0);
-                blend /= (blend.x + blend.y + blend.z);
+                float totalBlend = blend.x + blend.y + blend.z;
+                blend /= max(totalBlend, 0.00001);
 
                 // 4. Sample and interpolate triplanar textures
                 float2 uv_xz = i.worldPos.xz / _Scale;
@@ -145,7 +145,7 @@ Shader "Character/StatueDiffuse" {
                 fixed shadow = SHADOW_ATTENUATION(i);
 
                 fixed4 c;
-                c.rgb = (albedo * _LightColor0.rgb) * (NdotL * shadow * 2.0) + (albedo * i.shLight);
+                c.rgb = (albedo * _LightColor0.rgb) * (NdotL * shadow) + (albedo * i.shLight);
                 c.a = alpha;
                 return c;
             }
@@ -205,27 +205,23 @@ Shader "Character/StatueDiffuse" {
                 v2f_add o;
                 UNITY_INITIALIZE_OUTPUT(v2f_add, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
-                o.worldPos.xyz = mul(_Object2World, v.vertex).xyz;
+                o.worldPos.xyz = mul(unity_ObjectToWorld, v.vertex).xyz;
 
                 TANGENT_SPACE_ROTATION;
 
-                float3 worldXInObj = _Object2World[0].xyz;
-                float3 worldYInObj = _Object2World[1].xyz;
-                float3 worldZInObj = _Object2World[2].xyz;
+                float3 worldXInObj = unity_ObjectToWorld[0].xyz;
+                float3 worldYInObj = unity_ObjectToWorld[1].xyz;
+                float3 worldZInObj = unity_ObjectToWorld[2].xyz;
 
-                o.worldXTangent.xyz = mul(rotation, worldXInObj * unity_Scale.w);
-                o.worldYTangent.xyz = mul(rotation, worldYInObj * unity_Scale.w);
-                o.worldZTangent = mul(rotation, worldZInObj * unity_Scale.w);
+                o.worldXTangent.xyz = mul(rotation, worldXInObj);
+                o.worldYTangent.xyz = mul(rotation, worldYInObj);
+                o.worldZTangent = mul(rotation, worldZInObj);
 
                 // Tangent-space Light Direction
-                float3 objLightVec = mul(_World2Object, _WorldSpaceLightPos0).xyz;
-                if (_WorldSpaceLightPos0.w > 0.0) {
-                    objLightVec = objLightVec * unity_Scale.w - v.vertex.xyz;
-                }
-                float3 lightTangent = mul(rotation, objLightVec);
+                float3 lightTangent = mul(rotation, ObjSpaceLightDir(v.vertex));
 
                 // Pack lightTangent into .w components
                 o.worldPos.w = lightTangent.x;
@@ -248,7 +244,8 @@ Shader "Character/StatueDiffuse" {
                 worldNormal = normalize(worldNormal);
 
                 half3 blend = max(abs(worldNormal) - _Tighten, 0.0);
-                blend /= (blend.x + blend.y + blend.z);
+                float totalBlend = blend.x + blend.y + blend.z;
+                blend /= max(totalBlend, 0.00001);
 
                 float2 uv_xz = i.worldPos.xz / _Scale;
                 float2 uv_xy = i.worldPos.xy / _Scale;
@@ -273,7 +270,7 @@ Shader "Character/StatueDiffuse" {
                 fixed atten = LIGHT_ATTENUATION(i);
 
                 fixed4 c;
-                c.rgb = (albedo * _LightColor0.rgb) * (NdotL * atten * 2.0);
+                c.rgb = (albedo * _LightColor0.rgb) * (NdotL * atten);
                 c.a = alpha;
                 return c;
             }
@@ -315,11 +312,11 @@ Shader "Character/StatueDiffuse" {
 
             v2f_prepass_base vert_prepass_base (appdata_prepass v) {
                 v2f_prepass_base o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uvBump = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
-                o.worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
-                o.worldTangent = normalize(mul((float3x3)_Object2World, v.tangent.xyz));
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
+                o.worldTangent = UnityObjectToWorldDir(v.tangent.xyz);
                 o.worldBinormal = cross(o.worldNormal, o.worldTangent) * v.tangent.w;
 
                 return o;
@@ -389,23 +386,23 @@ Shader "Character/StatueDiffuse" {
 
             v2f_prepass_final vert_prepass_final (appdata_prepass v) {
                 v2f_prepass_final o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
-                o.worldPos = mul(_Object2World, v.vertex).xyz;
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.screenPos = ComputeScreenPos(o.pos);
 
                 TANGENT_SPACE_ROTATION;
 
-                float3 worldXInObj = _Object2World[0].xyz;
-                float3 worldYInObj = _Object2World[1].xyz;
-                float3 worldZInObj = _Object2World[2].xyz;
+                float3 worldXInObj = unity_ObjectToWorld[0].xyz;
+                float3 worldYInObj = unity_ObjectToWorld[1].xyz;
+                float3 worldZInObj = unity_ObjectToWorld[2].xyz;
 
-                o.worldXTangent = mul(rotation, worldXInObj * unity_Scale.w);
-                o.worldYTangent = mul(rotation, worldYInObj * unity_Scale.w);
-                o.worldZTangent = mul(rotation, worldZInObj * unity_Scale.w);
+                o.worldXTangent = mul(rotation, worldXInObj);
+                o.worldYTangent = mul(rotation, worldYInObj);
+                o.worldZTangent = mul(rotation, worldZInObj);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
 
                 return o;
@@ -421,7 +418,8 @@ Shader "Character/StatueDiffuse" {
                 worldNormal = normalize(worldNormal);
 
                 half3 blend = max(abs(worldNormal) - _Tighten, 0.0);
-                blend /= (blend.x + blend.y + blend.z);
+                float totalBlend = blend.x + blend.y + blend.z;
+                blend /= max(totalBlend, 0.00001);
 
                 float2 uv_xz = i.worldPos.xz / _Scale;
                 float2 uv_xy = i.worldPos.xy / _Scale;

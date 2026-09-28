@@ -22,7 +22,6 @@ Shader "Custom/Explosion" {
 
             CGPROGRAM
             #pragma target 3.0
-            #pragma glsl
             #pragma vertex vert_base
             #pragma fragment frag_base
             #pragma multi_compile_fwdbase
@@ -66,11 +65,11 @@ Shader "Custom/Explosion" {
                 float4 displacedVertex = v.vertex;
                 displacedVertex.xyz += norm * dispAmount;
 
-                o.pos = mul(UNITY_MATRIX_MVP, displacedVertex);
+                o.pos = UnityObjectToClipPos(displacedVertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _DispTex);
 
-                // World normal for lighting (original normal, scaled)
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, norm * unity_Scale.w));
+                // World normal for lighting (original normal transformed to world space)
+                float3 worldNormal = UnityObjectToWorldNormal(norm);
                 o.worldNormal = worldNormal;
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
 
@@ -101,7 +100,7 @@ Shader "Custom/Explosion" {
                 fixed shadow = SHADOW_ATTENUATION(i);
 
                 fixed4 c;
-                c.rgb = (diffColor * _LightColor0.rgb) * (NdotL * shadow * 2.0)
+                c.rgb = (diffColor * _LightColor0.rgb) * (NdotL * shadow)
                       + (diffColor * i.shLight)
                       + emissionColor;
                 c.a = 0.0;
@@ -123,7 +122,6 @@ Shader "Custom/Explosion" {
 
             CGPROGRAM
             #pragma target 3.0
-            #pragma glsl
             #pragma vertex vert_add
             #pragma fragment frag_add
             #pragma multi_compile_fwdadd_fullshadows
@@ -166,13 +164,13 @@ Shader "Custom/Explosion" {
                 float4 displacedVertex = v.vertex;
                 displacedVertex.xyz += norm * dispAmount;
 
-                o.pos = mul(UNITY_MATRIX_MVP, displacedVertex);
+                o.pos = UnityObjectToClipPos(displacedVertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _DispTex);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, norm * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(norm);
                 o.worldNormal = worldNormal;
 
-                float3 worldPos = mul(_Object2World, displacedVertex).xyz;
+                float3 worldPos = mul(unity_ObjectToWorld, displacedVertex).xyz;
                 o.lightDir = _WorldSpaceLightPos0.xyz - worldPos * _WorldSpaceLightPos0.w;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -196,7 +194,7 @@ Shader "Custom/Explosion" {
                 fixed atten = LIGHT_ATTENUATION(i);
 
                 fixed4 c;
-                c.rgb = (diffColor * _LightColor0.rgb) * (NdotL * atten * 2.0);
+                c.rgb = (diffColor * _LightColor0.rgb) * (NdotL * atten);
                 c.a = 0.0;
                 return c;
             }
@@ -214,7 +212,6 @@ Shader "Custom/Explosion" {
 
             CGPROGRAM
             #pragma target 3.0
-            #pragma glsl
             #pragma vertex vert_prepass_base
             #pragma fragment frag_prepass_base
 
@@ -249,9 +246,9 @@ Shader "Custom/Explosion" {
                 float4 displacedVertex = v.vertex;
                 displacedVertex.xyz += norm * dispAmount;
 
-                o.pos = mul(UNITY_MATRIX_MVP, displacedVertex);
+                o.pos = UnityObjectToClipPos(displacedVertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _DispTex);
-                o.worldNormal = normalize(mul((float3x3)_Object2World, norm * unity_Scale.w));
+                o.worldNormal = UnityObjectToWorldNormal(norm);
 
                 return o;
             }
@@ -283,7 +280,6 @@ Shader "Custom/Explosion" {
 
             CGPROGRAM
             #pragma target 3.0
-            #pragma glsl
             #pragma vertex vert_prepass_final
             #pragma fragment frag_prepass_final
             #pragma multi_compile HDR_LIGHT_PREPASS_OFF HDR_LIGHT_PREPASS_ON
@@ -322,12 +318,12 @@ Shader "Custom/Explosion" {
                 float4 displacedVertex = v.vertex;
                 displacedVertex.xyz += norm * dispAmount;
 
-                float4 clipPos = mul(UNITY_MATRIX_MVP, displacedVertex);
+                float4 clipPos = UnityObjectToClipPos(displacedVertex);
                 o.pos = clipPos;
                 o.uv = TRANSFORM_TEX(v.texcoord, _DispTex);
                 o.screenPos = ComputeScreenPos(clipPos);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, norm * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(norm);
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
 
                 return o;

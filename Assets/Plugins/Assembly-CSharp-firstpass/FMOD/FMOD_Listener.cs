@@ -53,8 +53,7 @@ public class FMOD_Listener : MonoBehaviour
 		{
 			bankPath = Application.dataPath + "/StreamingAssets";
 		}
-		else if (Application.platform == RuntimePlatform.OSXPlayer ||
-			Application.platform == RuntimePlatform.OSXDashboardPlayer)
+		else if (Application.platform == RuntimePlatform.OSXPlayer)
 		{
 			bankPath = Application.dataPath + "/Data/StreamingAssets";
 		}
@@ -190,7 +189,6 @@ public class FMOD_Listener : MonoBehaviour
 			else if (Application.platform == RuntimePlatform.WindowsPlayer ||
 			         Application.platform == RuntimePlatform.OSXEditor ||
 			         Application.platform == RuntimePlatform.OSXPlayer ||
-			         Application.platform == RuntimePlatform.OSXDashboardPlayer ||
 			         Application.platform == RuntimePlatform.LinuxPlayer
 #if PLATFORM_PS4
 				     || Application.platform == RuntimePlatform.PS4
@@ -231,8 +229,7 @@ public class FMOD_Listener : MonoBehaviour
 			return rawName + ".dll";
 		}
 		else if (Application.platform == RuntimePlatform.OSXEditor ||
-		         Application.platform == RuntimePlatform.OSXPlayer ||
-		         Application.platform == RuntimePlatform.OSXDashboardPlayer)
+		         Application.platform == RuntimePlatform.OSXPlayer)
 		{
 			return rawName + ".dylib";
 		}

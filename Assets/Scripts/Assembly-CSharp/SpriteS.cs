@@ -712,9 +712,9 @@ public static class SpriteS
 					{
 						list2[num].layer = _camera.gameObject.layer;
 					}
-					list2[num].AddComponent("MeshFilter");
-					MeshRenderer meshRenderer = list2[num].AddComponent("MeshRenderer") as MeshRenderer;
-					meshRenderer.renderer.material = p_spriteSheet.m_material;
+					list2[num].AddComponent<MeshFilter>();
+					MeshRenderer meshRenderer = list2[num].AddComponent<MeshRenderer>() as MeshRenderer;
+					meshRenderer.GetComponent<Renderer>().material = p_spriteSheet.m_material;
 				}
 			}
 			for (int k = 0; k < list3.Count; k++)

@@ -854,8 +854,8 @@ public class AutoGeometryLayer
 		if (list.Count > 0)
 		{
 			PrefabC prefabC = PrefabS.CreatePrefabFromMeshArray(_tile.TC, list.ToArray(), 9, m_beltMaterial, true);
-			prefabC.p_gameObject.renderer.castShadows = false;
-			prefabC.p_gameObject.renderer.receiveShadows = false;
+			prefabC.p_gameObject.GetComponent<Renderer>().castShadows = false;
+			prefabC.p_gameObject.GetComponent<Renderer>().receiveShadows = false;
 		}
 		_tile.regenerateCollisionShapes = false;
 	}

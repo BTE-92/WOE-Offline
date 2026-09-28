@@ -1,21 +1,13 @@
-// Upgrade NOTE: commented out 'float4 unity_ShadowFadeCenterAndType', a built-in variable
-
 // Reconstructed from Unity 4.x iOS GLES disassembly.
 //
-// Structure notes (inferred from the disassembly):
+// Structure notes:
 //  - The shader draws TWO layers per object:
 //      "BACK"  = ground layer, samples _BeltTex, no vertex offset, normal ZTest.
 //      "FRONT" = overlay layer, samples _MainTex, offsets vertices in the
 //                XY plane by (uv1 * _OffsetX, uv1 * _OffsetY), and always
 //                renders on top via ZTest Always (avoids z-fighting with BACK).
 //  - Both layers implement ForwardBase / ForwardAdd / PrePassBase / PrePassFinal
-//    (legacy "Light Prepass" deferred lighting support). No ShadowCaster or
-//    ShadowCollector pass exists in the source disassembly, so none is added here.
-//  - UV0 is always transformed with _MainTex_ST (even on the BACK layer, which
-//    samples _BeltTex) - this quirk is preserved exactly from the disassembly.
-//  - UV1 (texcoord1) does double duty on the FRONT layer: it's the offset mask
-//    AND, under LIGHTMAP_ON, is reused as the lightmap UV source - preserved
-//    exactly as found.
+//    (legacy "Light Prepass" deferred lighting support).
 
 Shader "PlaySomething/GroundFrontWithVertOffset"
 {
@@ -50,11 +42,6 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
             #include "Lighting.cginc"
             #include "AutoLight.cginc"
 
-            #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            float4 unity_LightmapST;
-            #endif
-
             struct appdata_baseBack
             {
                 float4 vertex : POSITION;
@@ -82,12 +69,12 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 v2f_baseBack o;
                 UNITY_INITIALIZE_OUTPUT(v2f_baseBack, o);
 
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 float3 vLight = ShadeSH9(half4(worldNormal, 1.0));
                 #ifdef VERTEXLIGHT_ON
-                    float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                    float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                     vLight += Shade4PointLights(
                         unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
                         unity_LightColor[0].rgb, unity_LightColor[1].rgb,
@@ -100,7 +87,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                     o.lmap = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #endif
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -114,12 +101,12 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
 
                 fixed4 col;
                 #ifdef LIGHTMAP_ON
-                    fixed3 lm = tex2D(unity_Lightmap, i.lmap).rgb * 2.0;
+                    fixed3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
                     col.rgb = albedo * lm;
                 #else
                     fixed atten = LIGHT_ATTENUATION(i);
                     fixed3 diff = albedo * _LightColor0.rgb *
-                        (max(0, dot(i.worldNormal, _WorldSpaceLightPos0.xyz)) * atten * 2.0);
+                        (max(0, dot(i.worldNormal, _WorldSpaceLightPos0.xyz)) * atten);
                     col.rgb = diff + albedo * i.vLight;
                 #endif
                 col.a = 0;
@@ -170,8 +157,8 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 v2f_addBack o;
                 UNITY_INITIALIZE_OUTPUT(v2f_addBack, o);
 
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 #ifdef USING_DIRECTIONAL_LIGHT
@@ -180,7 +167,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                     o.lightDir = _WorldSpaceLightPos0.xyz - worldPos;
                 #endif
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -197,7 +184,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
 
                 fixed4 col;
                 col.rgb = albedo * _LightColor0.rgb *
-                    (max(0, dot(i.worldNormal, lightDir)) * atten * 2.0);
+                    (max(0, dot(i.worldNormal, lightDir)) * atten);
                 col.a = 0;
                 return col;
             }
@@ -232,8 +219,8 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
             {
                 v2f_prepassBaseBack o;
                 UNITY_INITIALIZE_OUTPUT(v2f_prepassBaseBack, o);
-                o.worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 return o;
             }
 
@@ -262,11 +249,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
             #include "Lighting.cginc"
 
             #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            sampler2D unity_LightmapInd;
-            float4 unity_LightmapST;
             float4 unity_LightmapFade;
-            // float4 unity_ShadowFadeCenterAndType;
             #endif
 
             struct appdata_prepassFinalBack
@@ -296,19 +279,19 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 v2f_prepassFinalBack o;
                 UNITY_INITIALIZE_OUTPUT(v2f_prepassFinalBack, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.projPos = ComputeScreenPos(o.pos);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 #if defined(LIGHTMAP_ON) && defined(DIRLIGHTMAP_OFF)
                     o.shOrLmapUV.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
-                    float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                    float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                     o.fade.xyz = (worldPos - unity_ShadowFadeCenterAndType.xyz) * unity_ShadowFadeCenterAndType.w;
-                    o.fade.w = -mul(UNITY_MATRIX_MV, v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
+                    o.fade.w = -UnityObjectToViewPos(v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
                 #elif defined(LIGHTMAP_ON)
                     o.shOrLmapUV.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #else
-                    float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                    float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                     o.shOrLmapUV = ShadeSH9(half4(worldNormal, 1.0));
                 #endif
 
@@ -329,10 +312,10 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 #endif
 
                 #ifdef LIGHTMAP_ON
-                    half3 lmFull = tex2D(unity_Lightmap, i.shOrLmapUV.xy).rgb * 2.0;
+                    half3 lmFull = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.shOrLmapUV.xy));
                     #ifdef DIRLIGHTMAP_OFF
                         half lmFade = sqrt(dot(i.fade, i.fade)) * unity_LightmapFade.z + unity_LightmapFade.w;
-                        half3 lmIndirect = tex2D(unity_LightmapInd, i.shOrLmapUV.xy).rgb * 2.0;
+                        half3 lmIndirect = DecodeLightmap(UNITY_SAMPLE_TEX2D_SAMPLER(unity_LightmapInd, unity_Lightmap, i.shOrLmapUV.xy));
                         light.rgb += lerp(lmIndirect, lmFull, saturate(lmFade));
                     #else
                         light.rgb += lmFull;
@@ -369,11 +352,6 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
             #include "Lighting.cginc"
             #include "AutoLight.cginc"
 
-            #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            float4 unity_LightmapST;
-            #endif
-
             struct appdata_baseFront
             {
                 float4 vertex : POSITION;
@@ -406,12 +384,12 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 float2 xyOffset = v.texcoord1.xy * float2(_OffsetX, _OffsetY);
                 v.vertex.xy += xyOffset;
 
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 float3 vLight = ShadeSH9(half4(worldNormal, 1.0));
                 #ifdef VERTEXLIGHT_ON
-                    float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                    float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                     vLight += Shade4PointLights(
                         unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
                         unity_LightColor[0].rgb, unity_LightColor[1].rgb,
@@ -424,7 +402,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                     o.lmap = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #endif
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -438,12 +416,12 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
 
                 fixed4 col;
                 #ifdef LIGHTMAP_ON
-                    fixed3 lm = tex2D(unity_Lightmap, i.lmap).rgb * 2.0;
+                    fixed3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
                     col.rgb = albedo * lm;
                 #else
                     fixed atten = LIGHT_ATTENUATION(i);
                     fixed3 diff = albedo * _LightColor0.rgb *
-                        (max(0, dot(i.worldNormal, _WorldSpaceLightPos0.xyz)) * atten * 2.0);
+                        (max(0, dot(i.worldNormal, _WorldSpaceLightPos0.xyz)) * atten);
                     col.rgb = diff + albedo * i.vLight;
                 #endif
                 col.a = 0;
@@ -501,8 +479,8 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 float2 xyOffset = v.texcoord1.xy * float2(_OffsetX, _OffsetY);
                 v.vertex.xy += xyOffset;
 
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 #ifdef USING_DIRECTIONAL_LIGHT
@@ -511,7 +489,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                     o.lightDir = _WorldSpaceLightPos0.xyz - worldPos;
                 #endif
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -528,7 +506,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
 
                 fixed4 col;
                 col.rgb = albedo * _LightColor0.rgb *
-                    (max(0, dot(i.worldNormal, lightDir)) * atten * 2.0);
+                    (max(0, dot(i.worldNormal, lightDir)) * atten);
                 col.a = 0;
                 return col;
             }
@@ -572,8 +550,8 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 float2 xyOffset = v.texcoord1.xy * float2(_OffsetX, _OffsetY);
                 v.vertex.xy += xyOffset;
 
-                o.worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 return o;
             }
 
@@ -603,11 +581,7 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
             #include "Lighting.cginc"
 
             #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            sampler2D unity_LightmapInd;
-            float4 unity_LightmapST;
             float4 unity_LightmapFade;
-            // float4 unity_ShadowFadeCenterAndType;
             #endif
 
             struct appdata_prepassFinalFront
@@ -642,19 +616,19 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 float2 xyOffset = v.texcoord1.xy * float2(_OffsetX, _OffsetY);
                 v.vertex.xy += xyOffset;
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.projPos = ComputeScreenPos(o.pos);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 #if defined(LIGHTMAP_ON) && defined(DIRLIGHTMAP_OFF)
                     o.shOrLmapUV.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
-                    float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                    float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                     o.fade.xyz = (worldPos - unity_ShadowFadeCenterAndType.xyz) * unity_ShadowFadeCenterAndType.w;
-                    o.fade.w = -mul(UNITY_MATRIX_MV, v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
+                    o.fade.w = -UnityObjectToViewPos(v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
                 #elif defined(LIGHTMAP_ON)
                     o.shOrLmapUV.xy = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #else
-                    float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                    float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                     o.shOrLmapUV = ShadeSH9(half4(worldNormal, 1.0));
                 #endif
 
@@ -675,10 +649,10 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
                 #endif
 
                 #ifdef LIGHTMAP_ON
-                    half3 lmFull = tex2D(unity_Lightmap, i.shOrLmapUV.xy).rgb * 2.0;
+                    half3 lmFull = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.shOrLmapUV.xy));
                     #ifdef DIRLIGHTMAP_OFF
                         half lmFade = sqrt(dot(i.fade, i.fade)) * unity_LightmapFade.z + unity_LightmapFade.w;
-                        half3 lmIndirect = tex2D(unity_LightmapInd, i.shOrLmapUV.xy).rgb * 2.0;
+                        half3 lmIndirect = DecodeLightmap(UNITY_SAMPLE_TEX2D_SAMPLER(unity_LightmapInd, unity_Lightmap, i.shOrLmapUV.xy));
                         light.rgb += lerp(lmIndirect, lmFull, saturate(lmFade));
                     #else
                         light.rgb += lmFull;
@@ -695,4 +669,6 @@ Shader "PlaySomething/GroundFrontWithVertOffset"
             ENDCG
         }
     }
+
+    Fallback "Diffuse"
 }

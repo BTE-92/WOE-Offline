@@ -22,7 +22,7 @@ public abstract class WWWRequest
 	protected void startRequest(bool _retryAfterFail, float _retryDelaySecs)
 	{
 		m_gameObject = new GameObject("Download: " + m_url);
-		m_thread = m_gameObject.AddComponent("WWWRequestThread") as WWWRequestThread;
+		m_thread = m_gameObject.AddComponent<WWWRequestThread>() as WWWRequestThread;
 		m_thread.init(this, _retryAfterFail, _retryDelaySecs);
 		Debug.Log("Starting WWWRequest: " + m_url);
 	}

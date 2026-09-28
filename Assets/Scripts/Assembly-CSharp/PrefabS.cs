@@ -12,9 +12,9 @@ public static class PrefabS
 	{
 		m_components = new DynamicArray<PrefabC>();
 		m_emptyGameObject = new GameObject("PrefabSystem: InstantiateHelper");
-		MeshFilter meshFilter = m_emptyGameObject.AddComponent("MeshFilter") as MeshFilter;
+		MeshFilter meshFilter = m_emptyGameObject.AddComponent<MeshFilter>() as MeshFilter;
 		meshFilter.mesh = new UnityEngine.Mesh();
-		MeshRenderer meshRenderer = m_emptyGameObject.AddComponent("MeshRenderer") as MeshRenderer;
+		MeshRenderer meshRenderer = m_emptyGameObject.AddComponent<MeshRenderer>() as MeshRenderer;
 		meshRenderer.enabled = false;
 	}
 
@@ -27,7 +27,7 @@ public static class PrefabS
 	{
 		PrefabC prefabC = m_components.AddItem();
 		prefabC.p_gameObject = Object.Instantiate(m_emptyGameObject) as GameObject;
-		prefabC.p_gameObject.renderer.enabled = true;
+		prefabC.p_gameObject.GetComponent<Renderer>().enabled = true;
 		prefabC.p_mesh = (prefabC.p_gameObject.GetComponent("MeshFilter") as MeshFilter).mesh;
 		prefabC.p_gameObject.transform.parent = _parentTC.transform;
 		prefabC.p_gameObject.transform.localPosition = _offset;
@@ -35,8 +35,8 @@ public static class PrefabS
 		prefabC.p_parentTC = _parentTC;
 		prefabC.m_name = _name;
 		prefabC.m_wasVisible = true;
-		prefabC.p_gameObject.renderer.castShadows = false;
-		prefabC.p_gameObject.renderer.receiveShadows = false;
+		prefabC.p_gameObject.GetComponent<Renderer>().castShadows = false;
+		prefabC.p_gameObject.GetComponent<Renderer>().receiveShadows = false;
 		EntityManager.AddComponentToEntity(_parentTC.p_entity, prefabC);
 		return prefabC;
 	}
@@ -50,7 +50,7 @@ public static class PrefabS
 	{
 		PrefabC prefabC = m_components.AddItem();
 		prefabC.p_gameObject = Object.Instantiate(_gameObject) as GameObject;
-		if (prefabC.p_gameObject.renderer == null)
+		if (prefabC.p_gameObject.GetComponent<Renderer>() == null)
 		{
 			MeshRenderer meshRenderer = prefabC.p_gameObject.AddComponent<MeshRenderer>();
 		}
@@ -74,9 +74,9 @@ public static class PrefabS
 			Debug.LogWarning("Trying to remove component that has already been removed");
 			return;
 		}
-		if (_c.p_gameObject.renderer != null)
+		if (_c.p_gameObject.GetComponent<Renderer>() != null)
 		{
-			Object.Destroy(_c.p_gameObject.renderer.material);
+			Object.Destroy(_c.p_gameObject.GetComponent<Renderer>().material);
 		}
 		if (_c.p_mesh != null)
 		{
@@ -239,12 +239,12 @@ public static class PrefabS
 
 	public static Color GetShaderColor(PrefabC _c)
 	{
-		return _c.p_gameObject.renderer.material.GetColor("_Color");
+		return _c.p_gameObject.GetComponent<Renderer>().material.GetColor("_Color");
 	}
 
 	public static void SetShaderColor(PrefabC _c, Color _color)
 	{
-		_c.p_gameObject.renderer.material.SetColor("_Color", _color);
+		_c.p_gameObject.GetComponent<Renderer>().material.SetColor("_Color", _color);
 	}
 
 	public static List<PrefabC> CreatePathPrefabComponentFromPolygon(TransformC _tc, Vector3 _offset, Polygon _polygon, float _width, Color _color, Material _material, Camera _camera, Position _align, bool _closed)
@@ -264,8 +264,8 @@ public static class PrefabS
 		PrefabC prefabC = AddComponent(_tc, Vector3.zero);
 		prefabC.p_gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
 		prefabC.p_gameObject.layer = _camera.gameObject.layer;
-		Object.Destroy(prefabC.p_gameObject.renderer.material);
-		prefabC.p_gameObject.renderer.material = _material;
+		Object.Destroy(prefabC.p_gameObject.GetComponent<Renderer>().material);
+		prefabC.p_gameObject.GetComponent<Renderer>().material = _material;
 		Vector3[] vertices = new Vector3[4]
 		{
 			new Vector3(_width * -0.5f, _height * 0.5f, 0f) + _offset,
@@ -298,8 +298,8 @@ public static class PrefabS
 		PrefabC prefabC = AddComponent(_tc, Vector3.zero);
 		prefabC.p_gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
 		prefabC.p_gameObject.layer = _camera.gameObject.layer;
-		Object.Destroy(prefabC.p_gameObject.renderer.material);
-		prefabC.p_gameObject.renderer.material = _material;
+		Object.Destroy(prefabC.p_gameObject.GetComponent<Renderer>().material);
+		prefabC.p_gameObject.GetComponent<Renderer>().material = _material;
 		Vector2[] array;
 		if (_points[0] - _points[_points.Length - 1] == Vector2.zero || !_closed)
 		{
@@ -421,8 +421,8 @@ public static class PrefabS
 		PrefabC prefabC = AddComponent(_tc, Vector3.zero);
 		prefabC.p_gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
 		prefabC.p_gameObject.layer = _camera.gameObject.layer;
-		Object.Destroy(prefabC.p_gameObject.renderer.material);
-		prefabC.p_gameObject.renderer.material = _material;
+		Object.Destroy(prefabC.p_gameObject.GetComponent<Renderer>().material);
+		prefabC.p_gameObject.GetComponent<Renderer>().material = _material;
 		Vector3[] array = new Vector3[_points.Length * 2];
 		Vector3[] array2 = new Vector3[_points.Length * 2];
 		Vector2[] array3 = new Vector2[_points.Length * 2];
@@ -616,8 +616,8 @@ public static class PrefabS
 				PrefabC prefabC = AddComponent(_tc, Vector3.zero);
 				prefabC.p_gameObject.transform.localRotation = Quaternion.Euler(Vector3.zero);
 				prefabC.p_gameObject.layer = _camera.gameObject.layer;
-				Object.Destroy(prefabC.p_gameObject.renderer.material);
-				prefabC.p_gameObject.renderer.material = _material;
+				Object.Destroy(prefabC.p_gameObject.GetComponent<Renderer>().material);
+				prefabC.p_gameObject.GetComponent<Renderer>().material = _material;
 				prefabC.m_name = _identifier;
 				VertexList vertexList2 = tristrip.Strip[k];
 				Vector3[] array = new Vector3[vertexList2.NofVertices];
@@ -695,9 +695,9 @@ public static class PrefabS
 			}
 			if (_optimize)
 			{
-				prefabC.p_mesh.Optimize();
+				var o_697_4_639261763228148929 = prefabC.p_mesh;
 			}
-			prefabC.p_gameObject.renderer.material = _material;
+			prefabC.p_gameObject.GetComponent<Renderer>().material = _material;
 			prefabC.p_gameObject.layer = _cameraLayer;
 			return prefabC;
 		}
@@ -729,9 +729,9 @@ public static class PrefabS
 		}
 		if (_optimize)
 		{
-			prefabC.p_mesh.Optimize();
+			var o_731_3_639261763228350361 = prefabC.p_mesh;
 		}
-		prefabC.p_gameObject.renderer.material = _material;
+		prefabC.p_gameObject.GetComponent<Renderer>().material = _material;
 		prefabC.p_gameObject.layer = _cameraLayer;
 		if (_destroyMeshes)
 		{

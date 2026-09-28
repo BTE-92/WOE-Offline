@@ -63,7 +63,7 @@ public class BreakingPlatform : Unit
 			if (m_crumbleTimer <= 0f)
 			{
 				List<IComponent> componentsByEntity = EntityManager.GetComponentsByEntity(ComponentType.Prefab, m_crumbleFxEntity);
-				(componentsByEntity[0] as PrefabC).p_gameObject.particleSystem.Stop(true);
+				(componentsByEntity[0] as PrefabC).p_gameObject.GetComponent<ParticleSystem>().Stop(true);
 				EntityManager.AddTimedFXEntity(ResourceManager.GetGameObject("ParticleFx/CrumblingMaterialBreakdown"), m_mainTC.transform.position, m_mainTC.transform.rotation.eulerAngles, 5f, "GTAG_INGAME_PARTICLES");
 				Kill(DamageType.Impact, float.MaxValue);
 			}

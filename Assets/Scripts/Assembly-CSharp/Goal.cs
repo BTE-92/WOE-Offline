@@ -38,7 +38,7 @@ public class Goal : Unit
 		ChipmunkProWrapper.ucpBodySetLinearDamp(m_goalCmb.body, new Vector2(0.99f, 0.99f));
 		m_prefabC = PrefabS.AddComponent(transformC, Vector3.zero, gameObject);
 		m_prefabC.p_gameObject.transform.Rotate(new Vector3(0f, 180f, 0f));
-		m_confettiLocator = m_prefabC.p_gameObject.transform.FindChild("GoalBotBody/ConfettiLocator").gameObject;
+		m_confettiLocator = m_prefabC.p_gameObject.transform.Find("GoalBotBody/ConfettiLocator").gameObject;
 		m_animator = m_prefabC.p_gameObject.GetComponent("Animator") as Animator;
 		if (PsState.m_gameState == GameState.Test || PsState.m_gameState == GameState.Play)
 		{

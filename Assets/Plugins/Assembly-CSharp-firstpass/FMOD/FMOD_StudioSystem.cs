@@ -35,8 +35,8 @@ namespace FMOD
 				attributes.up = toFMODVector(go.transform.up);
 				attributes.position = toFMODVector(go.transform.position);
 		
-				if (go.rigidbody)
-					attributes.velocity = toFMODVector(go.rigidbody.velocity);
+				if (go.GetComponent<Rigidbody>())
+					attributes.velocity = toFMODVector(go.GetComponent<Rigidbody>().velocity);
 				
 				return attributes;
 			}

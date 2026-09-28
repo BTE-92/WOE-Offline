@@ -19,7 +19,7 @@ public class SpeedRamp : Unit
 		TransformS.SetTransform(transformC, _graphElement.m_position, _graphElement.m_rotation);
 		GameObject gameObject2 = gameObject.transform.Find("BoostRampBody").gameObject;
 		PrefabC prefabC = PrefabS.AddComponent(transformC, new Vector3(0f, 0f, 10f) + GetZBufferBias(), gameObject2);
-		m_laneMat = gameObject2.transform.Find("BoostRampConveyor").gameObject.renderer.sharedMaterial;
+		m_laneMat = gameObject2.transform.Find("BoostRampConveyor").gameObject.GetComponent<Renderer>().sharedMaterial;
 		ucpPolyShape ucpPolyShape2 = ChipmunkProS.GeneratePolyShapeFromGameObject(gameObject.transform.Find("CollisionBelt").gameObject, 1f, 0.25f, 1.2f, (ucpCollisionType)4);
 		ucpPolyShape ucpPolyShape3 = ChipmunkProS.GeneratePolyShapeFromGameObject(gameObject.transform.Find("CollisionBody").gameObject, 1f, 0.25f, 0.9f, (ucpCollisionType)4);
 		m_cmb = ChipmunkProS.AddStaticBody(transformC, new ucpShape[2] { ucpPolyShape2, ucpPolyShape3 }, m_unitC);

@@ -1,5 +1,3 @@
-// Upgrade NOTE: commented out 'float4 unity_ShadowFadeCenterAndType', a built-in variable
-
 Shader "PlaySomething/BiPlanarBeltDoubleTex" {
     Properties {
         _Color ("Diffuse Color", Color) = (1,1,1,1)
@@ -10,7 +8,8 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
     }
 
     SubShader {
-        Tags { "RenderType"="Opaque" }
+        // "DisableBatching"="True" preserves local object coordinates for objPos
+        Tags { "RenderType"="Opaque" "DisableBatching"="True" }
         LOD 200
 
         // ============================================================
@@ -29,11 +28,6 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             #include "UnityCG.cginc"
             #include "Lighting.cginc"
             #include "AutoLight.cginc"
-
-            #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            float4 unity_LightmapST;
-            #endif
 
             fixed4 _Color;
             fixed4 _Emission;
@@ -66,14 +60,14 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz + float3(0.0, 0.0, -225.0);
                 o.objNormal = normalize(v.normal);
 
                 #ifdef LIGHTMAP_ON
                     o.lmap = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #else
-                    float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                    float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                     o.worldNormal = worldNormal;
                     o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 #endif
@@ -82,15 +76,17 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
                 return o;
             }
 
-            // Unconditional bi-planar texturing (D3D9 SM3.0 compatible)
+            // Unconditional bi-planar texturing with safe normal math
             half3 BiPlanarSample(float3 objPos, float3 objNormal, float tiling) {
-                half2 projnormal = abs(normalize(objNormal.xy));
+                // Safely normalize XY normal component to prevent Division-By-Zero (NaN)
+                float2 xy = objNormal.xy;
+                float len = length(xy);
+                half2 projnormal = (len > 0.00001) ? abs(xy / len) : half2(0.0, 0.0);
                 projnormal = saturate(pow(projnormal, 6.0));
 
                 float2 uv_xz = tiling * objPos.xz;
                 float2 uv_yz = tiling * objPos.yz;
 
-                // Unconditional samples to avoid D3D9 SM3.0 dynamic branching error X6077
                 half3 color_xz1 = tex2D(_TexBase1, uv_xz).rgb;
                 half3 color_xz2 = tex2D(_TexBase2, uv_xz).rgb;
                 half3 color1    = tex2D(_TexBase2, uv_yz).rgb;
@@ -102,7 +98,8 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                half3 diffuse = BiPlanarSample(i.objPos, i.objNormal, _Tiling);
+                float3 normObj = normalize(i.objNormal);
+                half3 diffuse = BiPlanarSample(i.objPos, normObj, _Tiling);
 
                 half3 albedo = diffuse * _Color.rgb;
                 half3 emissive = diffuse * _Emission.rgb;
@@ -110,21 +107,19 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
                 fixed4 c = fixed4(0,0,0,0);
 
                 #ifdef LIGHTMAP_ON
-                    // Lightmap path
                     fixed shadow = SHADOW_ATTENUATION(i);
-                    half3 lm = 2.0 * DecodeLightmap(tex2D(unity_Lightmap, i.lmap));
+                    half3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
 
                     #if defined(SHADOWS_SCREEN) || defined(SHADOWS_NATIVE)
-                        c.rgb = albedo * min(lm, shadow * 2.0);
+                        c.rgb = albedo * min(lm, shadow);
                     #else
                         c.rgb = albedo * lm;
                     #endif
                 #else
-                    // Non-lightmap path
                     float3 worldN = normalize(i.worldNormal);
                     fixed shadow = SHADOW_ATTENUATION(i);
                     half NdotL = max(0, dot(worldN, _WorldSpaceLightPos0.xyz));
-                    half3 directLight = albedo * _LightColor0.rgb * (NdotL * shadow * 2.0);
+                    half3 directLight = albedo * _LightColor0.rgb * (NdotL * shadow);
                     half3 indirectLight = albedo * i.shLight;
                     c.rgb = directLight + indirectLight;
                 #endif
@@ -180,17 +175,13 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz + float3(0.0, 0.0, -225.0);
                 o.objNormal = normalize(v.normal);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
-                o.worldNormal = worldNormal;
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
-
-                // For directional lights _WorldSpaceLightPos0.w == 0
-                // For point/spot lights _WorldSpaceLightPos0.w == 1
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.lightDir = _WorldSpaceLightPos0.xyz - worldPos * _WorldSpaceLightPos0.w;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -198,7 +189,9 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             }
 
             half3 BiPlanarSample(float3 objPos, float3 objNormal, float tiling) {
-                half2 projnormal = abs(normalize(objNormal.xy));
+                float2 xy = objNormal.xy;
+                float len = length(xy);
+                half2 projnormal = (len > 0.00001) ? abs(xy / len) : half2(0.0, 0.0);
                 projnormal = saturate(pow(projnormal, 6.0));
 
                 float2 uv_xz = tiling * objPos.xz;
@@ -215,7 +208,8 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                half3 diffuse = BiPlanarSample(i.objPos, i.objNormal, _Tiling);
+                float3 normObj = normalize(i.objNormal);
+                half3 diffuse = BiPlanarSample(i.objPos, normObj, _Tiling);
                 half3 albedo = diffuse * _Color.rgb;
 
                 float3 lightDir = normalize(i.lightDir);
@@ -223,7 +217,7 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
                 half NdotL = max(0, dot(normalize(i.worldNormal), lightDir));
 
                 fixed4 c;
-                c.rgb = albedo * _LightColor0.rgb * (NdotL * atten * 2.0);
+                c.rgb = albedo * _LightColor0.rgb * (NdotL * atten);
                 c.a = 0.0;
                 return c;
             }
@@ -259,10 +253,10 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz + float3(0.0, 0.0, -225.0);
                 o.objNormal = normalize(v.normal);
-                o.worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
                 return o;
             }
 
@@ -292,14 +286,6 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             #pragma multi_compile HDR_LIGHT_PREPASS_OFF HDR_LIGHT_PREPASS_ON
 
             #include "UnityCG.cginc"
-
-            #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            sampler2D unity_LightmapInd;
-            float4 unity_LightmapST;
-            float4 unity_LightmapFade;
-            // float4 unity_ShadowFadeCenterAndType;
-            #endif
 
             fixed4 _Color;
             fixed4 _Emission;
@@ -335,22 +321,21 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz + float3(0.0, 0.0, -225.0);
                 o.objNormal = normalize(v.normal);
 
-                // Screen-space UV for _LightBuffer
                 o.screenPos = ComputeScreenPos(o.pos);
 
                 #ifdef LIGHTMAP_ON
                     o.lmap = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                     #if !defined(DIRLIGHTMAP_ON)
-                        float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                        float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                         o.fadeDist.xyz = (worldPos - unity_ShadowFadeCenterAndType.xyz) * unity_ShadowFadeCenterAndType.w;
-                        o.fadeDist.w = -mul(UNITY_MATRIX_MV, v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
+                        o.fadeDist.w = -UnityObjectToViewPos(v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
                     #endif
                 #else
-                    float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                    float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                     o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 #endif
 
@@ -358,7 +343,9 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             }
 
             half3 BiPlanarSample(float3 objPos, float3 objNormal, float tiling) {
-                half2 projnormal = abs(normalize(objNormal.xy));
+                float2 xy = objNormal.xy;
+                float len = length(xy);
+                half2 projnormal = (len > 0.00001) ? abs(xy / len) : half2(0.0, 0.0);
                 projnormal = saturate(pow(projnormal, 6.0));
 
                 float2 uv_xz = tiling * objPos.xz;
@@ -375,11 +362,11 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
             }
 
             fixed4 frag (v2f i) : SV_Target {
-                half3 diffuse = BiPlanarSample(i.objPos, i.objNormal, _Tiling);
+                float3 normObj = normalize(i.objNormal);
+                half3 diffuse = BiPlanarSample(i.objPos, normObj, _Tiling);
                 half3 albedo = diffuse * _Color.rgb;
                 half3 emissive = diffuse * _Emission.rgb;
 
-                // Sample light buffer
                 half4 light = tex2Dproj(_LightBuffer, UNITY_PROJ_COORD(i.screenPos));
 
                 #ifdef HDR_LIGHT_PREPASS_ON
@@ -390,26 +377,19 @@ Shader "PlaySomething/BiPlanarBeltDoubleTex" {
 
                 #ifdef LIGHTMAP_ON
                     #if defined(DIRLIGHTMAP_ON)
-                        // Directional lightmap
-                        half3 lm = 2.0 * DecodeLightmap(tex2D(unity_Lightmap, i.lmap));
+                        half3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
                         half4 lmAdd;
                         lmAdd.w = 0.0;
                         lmAdd.xyz = lm;
-                        #ifdef HDR_LIGHT_PREPASS_ON
-                            light += lmAdd;
-                        #else
-                            light += lmAdd;
-                        #endif
+                        light += lmAdd;
                     #else
-                        // Non-directional lightmap with fade
                         float lmFade = sqrt(dot(i.fadeDist, i.fadeDist)) * unity_LightmapFade.z + unity_LightmapFade.w;
                         lmFade = saturate(lmFade);
-                        half3 lmFull = 2.0 * DecodeLightmap(tex2D(unity_Lightmap, i.lmap));
-                        half3 lmIndirect = 2.0 * DecodeLightmap(tex2D(unity_LightmapInd, i.lmap));
+                        half3 lmFull = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
+                        half3 lmIndirect = DecodeLightmap(UNITY_SAMPLE_TEX2D_SAMPLER(unity_LightmapInd,unity_Lightmap, i.lmap));
                         light.rgb += lerp(lmIndirect, lmFull, lmFade);
                     #endif
                 #else
-                    // SH ambient
                     light.rgb += i.shLight;
                 #endif
 

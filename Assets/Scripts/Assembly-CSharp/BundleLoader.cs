@@ -94,14 +94,14 @@ public static class BundleLoader
 			{
 				if (m_asyncLoad)
 				{
-					m_bundleRequest = m_bundle.LoadAsync(m_bundleAssetNames[m_nextBundleAssetToLoad], typeof(UnityEngine.Object));
+					m_bundleRequest = m_bundle.LoadAssetAsync(m_bundleAssetNames[m_nextBundleAssetToLoad], typeof(UnityEngine.Object));
 					m_nextBundleAssetToLoad++;
 					return;
 				}
 				Debug.LogInfo("LOADING ALL BUNDLE ASSETS (Synchronous)");
 				for (int i = 0; i < m_bundleAssetNames.Length; i++)
 				{
-					AddBundleAssetToResources(m_bundle.Load(m_bundleAssetNames[m_nextBundleAssetToLoad]), m_bundleName);
+					AddBundleAssetToResources(m_bundle.LoadAsset(m_bundleAssetNames[m_nextBundleAssetToLoad]), m_bundleName);
 					m_nextBundleAssetToLoad++;
 				}
 			}
@@ -142,7 +142,7 @@ public static class BundleLoader
 			if ((bool)downloader.m_WWW.assetBundle)
 			{
 				m_bundle = downloader.m_WWW.assetBundle;
-				string text = (m_bundle.Load("object_names", typeof(TextAsset)) as TextAsset).text;
+				string text = (m_bundle.LoadAsset("object_names", typeof(TextAsset)) as TextAsset).text;
 				m_bundleAssetNames = text.Split(',');
 				ResourceManager.AddResourceGroup(m_bundleName);
 			}

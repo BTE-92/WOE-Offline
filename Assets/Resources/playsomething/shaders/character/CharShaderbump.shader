@@ -1,3 +1,8 @@
+#warning Upgrade NOTE: unity_Scale shader variable was removed; replaced 'unity_Scale.w' with '1.0'
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Character/CharShader-bumped" {
     Properties {
         _MainTex ("Texture", 2D) = "white" {}
@@ -61,22 +66,22 @@ Shader "Character/CharShader-bumped" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
                 TANGENT_SPACE_ROTATION;
 
                 // Transform light direction to tangent space
-                float3 objLightDir = mul(_World2Object, _WorldSpaceLightPos0).xyz;
+                float3 objLightDir = mul(unity_WorldToObject, _WorldSpaceLightPos0).xyz;
                 o.lightDirTangent = mul(rotation, objLightDir);
 
                 // Transform view direction to tangent space
-                float3 objViewDir = mul(_World2Object, float4(_WorldSpaceCameraPos, 1.0)).xyz * unity_Scale.w - v.vertex.xyz;
+                float3 objViewDir = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1.0)).xyz * 1.0 - v.vertex.xyz;
                 o.viewDirTangent = mul(rotation, objViewDir);
 
                 #ifndef LIGHTMAP_ON
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal * 1.0));
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 #endif
 
@@ -190,21 +195,21 @@ Shader "Character/CharShader-bumped" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
                 TANGENT_SPACE_ROTATION;
 
                 // Handle local position offset vector conversion for point/spot lights
-                float3 objLightVec = mul(_World2Object, _WorldSpaceLightPos0).xyz;
+                float3 objLightVec = mul(unity_WorldToObject, _WorldSpaceLightPos0).xyz;
                 if (_WorldSpaceLightPos0.w > 0.0) {
-                    objLightVec = objLightVec * unity_Scale.w - v.vertex.xyz;
+                    objLightVec = objLightVec * 1.0 - v.vertex.xyz;
                 }
                 o.lightDirTangent = mul(rotation, objLightVec);
 
                 // View direction transformation
-                float3 objViewDir = mul(_World2Object, float4(_WorldSpaceCameraPos, 1.0)).xyz * unity_Scale.w - v.vertex.xyz;
+                float3 objViewDir = mul(unity_WorldToObject, float4(_WorldSpaceCameraPos, 1.0)).xyz * 1.0 - v.vertex.xyz;
                 o.viewDirTangent = mul(rotation, objViewDir);
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -290,12 +295,12 @@ Shader "Character/CharShader-bumped" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
-                float3 worldTangent = normalize(mul((float3x3)_Object2World, v.tangent.xyz));
+                float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal * 1.0));
+                float3 worldTangent = normalize(mul((float3x3)unity_ObjectToWorld, v.tangent.xyz));
                 float3 worldBinormal = cross(worldNormal, worldTangent) * v.tangent.w;
 
                 o.tspace0 = worldTangent;
@@ -362,11 +367,11 @@ Shader "Character/CharShader-bumped" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.screenPos = ComputeScreenPos(o.pos);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal * 1.0));
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 return o;
             }

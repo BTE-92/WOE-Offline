@@ -10,7 +10,7 @@ public static class TextMeshS
 	{
 		m_components = new DynamicArray<TextMeshC>();
 		m_emptyGameObject = new GameObject("TextMeshSystem: InstantiateHelper");
-		TextMesh textMesh = m_emptyGameObject.AddComponent("TextMesh") as TextMesh;
+		TextMesh textMesh = m_emptyGameObject.AddComponent<TextMesh>() as TextMesh;
 		textMesh.characterSize = 10f;
 		MeshRenderer component = m_emptyGameObject.GetComponent<MeshRenderer>();
 		component.enabled = false;

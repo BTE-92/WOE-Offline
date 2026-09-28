@@ -4,6 +4,13 @@ using System.Collections.Generic;
 using Facebook;
 using MiniJSON;
 using UnityEngine;
+#if UNITY_IOS && !UNITY_EDITOR
+using NotificationServices = UnityEngine.iOS.NotificationServices;
+using NotificationType = UnityEngine.iOS.NotificationType;
+#else
+using NotificationServices = UnityEngine.NotificationServices;
+using NotificationType = UnityEngine.PushNotificationType;
+#endif
 
 public static class ServerManager
 {
@@ -37,7 +44,7 @@ public static class ServerManager
 		if (PlayerPrefs.GetString("deviceToken").Equals(string.Empty))
 		{
 			Debug.Log("Registering for notifications");
-			NotificationServices.RegisterForRemoteNotificationTypes((RemoteNotificationType)7);
+			NotificationServices.RegisterForNotifications((NotificationType)7);
 			m_pushRegistrationState = PushRegistrationState.SENT_TO_APPLE;
 		}
 	}

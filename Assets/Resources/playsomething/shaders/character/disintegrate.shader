@@ -1,6 +1,3 @@
-// Reconstructed from Unity 4.x iOS GLES disassembly.
-// Fixed for Unity 4 standalone compilation by removing redundant shadow collector declarations.
-
 Shader "Character/Disintegrate Diffuse"
 {
     Properties
@@ -65,12 +62,12 @@ Shader "Character/Disintegrate Diffuse"
                 v2f_baseDisintegrate o;
                 UNITY_INITIALIZE_OUTPUT(v2f_baseDisintegrate, o);
 
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 float3 vLight = ShadeSH9(half4(worldNormal, 1.0));
                 #ifdef VERTEXLIGHT_ON
-                    float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                    float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                     vLight += Shade4PointLights(
                         unity_4LightPosX0, unity_4LightPosY0, unity_4LightPosZ0,
                         unity_LightColor[0].rgb, unity_LightColor[1].rgb,
@@ -79,7 +76,7 @@ Shader "Character/Disintegrate Diffuse"
                 #endif
                 o.vLight = vLight;
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -107,7 +104,7 @@ Shader "Character/Disintegrate Diffuse"
 
                 fixed atten = LIGHT_ATTENUATION(i);
                 fixed3 diff = albedo * _LightColor0.rgb *
-                    (max(0, dot(i.worldNormal, _WorldSpaceLightPos0.xyz)) * atten * 2.0);
+                    (max(0, dot(i.worldNormal, _WorldSpaceLightPos0.xyz)) * atten);
 
                 fixed4 col;
                 col.rgb = diff + albedo * i.vLight;
@@ -167,8 +164,8 @@ Shader "Character/Disintegrate Diffuse"
                 v2f_addDisintegrate o;
                 UNITY_INITIALIZE_OUTPUT(v2f_addDisintegrate, o);
 
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 #ifdef USING_DIRECTIONAL_LIGHT
@@ -177,7 +174,7 @@ Shader "Character/Disintegrate Diffuse"
                     o.lightDir = _WorldSpaceLightPos0.xyz - worldPos;
                 #endif
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -201,7 +198,7 @@ Shader "Character/Disintegrate Diffuse"
 
                 fixed4 col;
                 col.rgb = albedo * _LightColor0.rgb *
-                    (max(0, dot(i.worldNormal, lightDir)) * atten * 2.0);
+                    (max(0, dot(i.worldNormal, lightDir)) * atten);
                 col.a = 0;
                 return col;
             }
@@ -246,8 +243,8 @@ Shader "Character/Disintegrate Diffuse"
             {
                 v2f_prepassBaseDisintegrate o;
                 UNITY_INITIALIZE_OUTPUT(v2f_prepassBaseDisintegrate, o);
-                o.worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
                 return o;
             }
@@ -312,11 +309,11 @@ Shader "Character/Disintegrate Diffuse"
                 v2f_prepassFinalDisintegrate o;
                 UNITY_INITIALIZE_OUTPUT(v2f_prepassFinalDisintegrate, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.projPos = ComputeScreenPos(o.pos);
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
-                float3 worldNormal = mul((float3x3)_Object2World, normalize(v.normal) * unity_Scale.w);
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.shAmbient = ShadeSH9(half4(worldNormal, 1.0));
 
                 return o;
@@ -379,7 +376,7 @@ Shader "Character/Disintegrate Diffuse"
             struct appdata_shadowCasterDisintegrate
             {
                 float4 vertex : POSITION;
-                float3 normal : NORMAL; // Required for Unity 4.5+ normal bias
+                float3 normal : NORMAL;
                 float4 texcoord : TEXCOORD0;
             };
 
@@ -459,16 +456,16 @@ Shader "Character/Disintegrate Diffuse"
                 v2f_shadowCollectorDisintegrate o;
                 UNITY_INITIALIZE_OUTPUT(v2f_shadowCollectorDisintegrate, o);
 
-                float4 worldPos = mul(_Object2World, v.vertex);
+                float4 worldPos = mul(unity_ObjectToWorld, v.vertex);
                 o.worldPosViewZ.xyz = worldPos.xyz;
-                o.worldPosViewZ.w = -mul(UNITY_MATRIX_MV, v.vertex).z;
+                o.worldPosViewZ.w = -UnityObjectToViewPos(v.vertex).z;
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
 
-                o.shadowCoord0 = mul(unity_World2Shadow[0], worldPos).xyz;
-                o.shadowCoord1 = mul(unity_World2Shadow[1], worldPos).xyz;
-                o.shadowCoord2 = mul(unity_World2Shadow[2], worldPos).xyz;
-                o.shadowCoord3 = mul(unity_World2Shadow[3], worldPos).xyz;
+                o.shadowCoord0 = mul(unity_WorldToShadow[0], worldPos).xyz;
+                o.shadowCoord1 = mul(unity_WorldToShadow[1], worldPos).xyz;
+                o.shadowCoord2 = mul(unity_WorldToShadow[2], worldPos).xyz;
+                o.shadowCoord3 = mul(unity_WorldToShadow[3], worldPos).xyz;
 
                 o.uv = v.texcoord.xy * _MainTex_ST.xy + _MainTex_ST.zw;
 
@@ -516,7 +513,6 @@ Shader "Character/Disintegrate Diffuse"
                 // --- Shadow Sampling ---
                 half shadowAtten;
                 #if defined(SHADOWS_NATIVE)
-                    // Native hardware shadow compare (tex2Dproj with z in w)
                     half rawShadow = tex2Dproj(
                         _ShadowMapTexture,
                         float4(samplePos.xy, 0.0, samplePos.z)
@@ -524,7 +520,6 @@ Shader "Character/Disintegrate Diffuse"
                     shadowAtten = _LightShadowData.x
                                 + rawShadow * (1.0 - _LightShadowData.x);
                 #else
-                    // Manual depth comparison
                     fixed rawShadow = tex2D(_ShadowMapTexture, samplePos.xy).x;
                     shadowAtten = max(
                         (float)(rawShadow > samplePos.z),

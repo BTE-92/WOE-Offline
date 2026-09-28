@@ -1,5 +1,3 @@
-// Upgrade NOTE: commented out 'float4 unity_ShadowFadeCenterAndType', a built-in variable
-
 Shader "PlaySomething/Triplanar" {
     Properties {
         _Color ("Diffuse Color", Color) = (1,1,1,1)
@@ -29,11 +27,6 @@ Shader "PlaySomething/Triplanar" {
             #include "UnityCG.cginc"
             #include "Lighting.cginc"
             #include "AutoLight.cginc"
-
-            #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            float4 unity_LightmapST;
-            #endif
 
             fixed4 _Color;
             float _Tiling;
@@ -66,14 +59,14 @@ Shader "PlaySomething/Triplanar" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz;
                 o.objNormal = normalize(v.normal);
 
                 #ifdef LIGHTMAP_ON
                 o.lmap = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #else
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 #endif
@@ -92,7 +85,7 @@ Shader "PlaySomething/Triplanar" {
                 half4 color1 = tex2D(_TexBase2, uv_zx); // ZX plane texture
                 half4 color2 = tex2D(_TexBase3, uv_zy); // ZY plane texture
 
-                // Normal-based blending weights matching the exact GLSL clamp/pow math
+                // Normal-based blending weights
                 half3 blend = saturate(pow(abs(objNormal) * 1.5, 50.0));
 
                 // Blends Y and Z using Z weight, then interpolates towards X using X weight
@@ -109,16 +102,16 @@ Shader "PlaySomething/Triplanar" {
                 fixed4 c = fixed4(0,0,0,0);
 
                 #ifdef LIGHTMAP_ON
-                half3 lm = 2.0 * DecodeLightmap(tex2D(unity_Lightmap, i.lmap));
+                half3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
                 #if defined(SHADOWS_SCREEN) || defined(SHADOWS_NATIVE)
-                c.rgb = diffuseColor * min(lm, shadow * 2.0);
+                c.rgb = diffuseColor * min(lm, shadow);
                 #else
                 c.rgb = diffuseColor * lm;
                 #endif
                 #else
                 float3 worldNormal = normalize(i.worldNormal);
                 half NdotL = max(0.0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
-                half3 directLight = diffuseColor * _LightColor0.rgb * (NdotL * shadow * 2.0);
+                half3 directLight = diffuseColor * _LightColor0.rgb * (NdotL * shadow);
                 half3 indirectLight = diffuseColor * i.shLight;
                 c.rgb = directLight + indirectLight;
                 #endif
@@ -173,14 +166,13 @@ Shader "PlaySomething/Triplanar" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz;
                 o.objNormal = normalize(v.normal);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
-                o.worldNormal = worldNormal;
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.lightDir = _WorldSpaceLightPos0.xyz - worldPos * _WorldSpaceLightPos0.w;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -213,7 +205,7 @@ Shader "PlaySomething/Triplanar" {
                 fixed atten = LIGHT_ATTENUATION(i);
 
                 fixed4 c;
-                c.rgb = diffuseColor * _LightColor0.rgb * (NdotL * atten * 2.0);
+                c.rgb = diffuseColor * _LightColor0.rgb * (NdotL * atten);
                 c.a = 0.0;
                 return c;
             }
@@ -247,8 +239,8 @@ Shader "PlaySomething/Triplanar" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
-                o.worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                o.pos = UnityObjectToClipPos(v.vertex);
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
                 return o;
             }
 
@@ -278,14 +270,6 @@ Shader "PlaySomething/Triplanar" {
             #pragma multi_compile HDR_LIGHT_PREPASS_OFF HDR_LIGHT_PREPASS_ON
 
             #include "UnityCG.cginc"
-
-            #ifdef LIGHTMAP_ON
-            sampler2D unity_Lightmap;
-            sampler2D unity_LightmapInd;
-            float4 unity_LightmapST;
-            float4 unity_LightmapFade;
-            // float4 unity_ShadowFadeCenterAndType;
-            #endif
 
             fixed4 _Color;
             float _Tiling;
@@ -321,7 +305,7 @@ Shader "PlaySomething/Triplanar" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.objPos = v.vertex.xyz;
                 o.objNormal = normalize(v.normal);
                 o.screenPos = ComputeScreenPos(o.pos);
@@ -329,12 +313,12 @@ Shader "PlaySomething/Triplanar" {
                 #ifdef LIGHTMAP_ON
                 o.lmap = v.texcoord1.xy * unity_LightmapST.xy + unity_LightmapST.zw;
                 #if !defined(DIRLIGHTMAP_ON)
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.fadeDist.xyz = (worldPos - unity_ShadowFadeCenterAndType.xyz) * unity_ShadowFadeCenterAndType.w;
-                o.fadeDist.w = -mul(UNITY_MATRIX_MV, v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
+                o.fadeDist.w = -UnityObjectToViewPos(v.vertex).z * (1.0 - unity_ShadowFadeCenterAndType.w);
                 #endif
                 #else
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 #endif
 
@@ -371,13 +355,13 @@ Shader "PlaySomething/Triplanar" {
 
                 #ifdef LIGHTMAP_ON
                 #if defined(DIRLIGHTMAP_ON)
-                half3 lm = 2.0 * DecodeLightmap(tex2D(unity_Lightmap, i.lmap));
+                half3 lm = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
                 light.rgb += lm;
                 #else
                 float lmFade = sqrt(dot(i.fadeDist, i.fadeDist)) * unity_LightmapFade.z + unity_LightmapFade.w;
                 lmFade = saturate(lmFade);
-                half3 lmFull = 2.0 * DecodeLightmap(tex2D(unity_Lightmap, i.lmap));
-                half3 lmIndirect = 2.0 * DecodeLightmap(tex2D(unity_LightmapInd, i.lmap));
+                half3 lmFull = DecodeLightmap(UNITY_SAMPLE_TEX2D(unity_Lightmap, i.lmap));
+                half3 lmIndirect = DecodeLightmap(UNITY_SAMPLE_TEX2D_SAMPLER(unity_LightmapInd,unity_Lightmap, i.lmap));
                 light.rgb += lerp(lmIndirect, lmFull, lmFade);
                 #endif
                 #else

@@ -1,3 +1,8 @@
+#warning Upgrade NOTE: unity_Scale shader variable was removed; replaced 'unity_Scale.w' with '1.0'
+// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+// Upgrade NOTE: replaced '_World2Object' with 'unity_WorldToObject'
+// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
+
 Shader "Character/StatueBmp" {
     Properties {
         _Color ("Main Color", Color) = (1,1,1,1)
@@ -67,25 +72,25 @@ Shader "Character/StatueBmp" {
                 v2f_base o;
                 UNITY_INITIALIZE_OUTPUT(v2f_base, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
-                o.worldPos.xyz = mul(_Object2World, v.vertex).xyz;
+                o.worldPos.xyz = mul(unity_ObjectToWorld, v.vertex).xyz;
 
                 // Reconstruct Tangent Space transformation matrix
                 TANGENT_SPACE_ROTATION;
 
                 // Exact world basis projections in object space from GLES bytecode
-                float3 worldXInObj = _Object2World[0].xyz;
-                float3 worldYInObj = _Object2World[1].xyz;
-                float3 worldZInObj = _Object2World[2].xyz;
+                float3 worldXInObj = unity_ObjectToWorld[0].xyz;
+                float3 worldYInObj = unity_ObjectToWorld[1].xyz;
+                float3 worldZInObj = unity_ObjectToWorld[2].xyz;
 
-                o.worldXTangent.xyz = mul(rotation, worldXInObj * unity_Scale.w);
-                o.worldYTangent.xyz = mul(rotation, worldYInObj * unity_Scale.w);
-                o.worldZTangent = mul(rotation, worldZInObj * unity_Scale.w);
+                o.worldXTangent.xyz = mul(rotation, worldXInObj * 1.0);
+                o.worldYTangent.xyz = mul(rotation, worldYInObj * 1.0);
+                o.worldZTangent = mul(rotation, worldZInObj * 1.0);
 
                 // Tangent-space Light Direction
-                float3 objLightDir = mul(_World2Object, _WorldSpaceLightPos0).xyz;
+                float3 objLightDir = mul(unity_WorldToObject, _WorldSpaceLightPos0).xyz;
                 float3 lightTangent = mul(rotation, objLightDir);
 
                 // Pack lightTangent into .w components to fit under 8 input limit
@@ -94,7 +99,7 @@ Shader "Character/StatueBmp" {
                 o.worldYTangent.w = lightTangent.z;
 
                 // Spherical Harmonics ambient evaluated at World Normal
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal * 1.0));
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
 
                 TRANSFER_SHADOW(o);
@@ -187,11 +192,11 @@ Shader "Character/StatueBmp" {
 
             v2f_prepass_base vert_prepass_base (appdata_prepass v) {
                 v2f_prepass_base o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uvBump = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
-                o.worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
-                o.worldTangent = normalize(mul((float3x3)_Object2World, v.tangent.xyz));
+                o.worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal * 1.0));
+                o.worldTangent = normalize(mul((float3x3)unity_ObjectToWorld, v.tangent.xyz));
                 o.worldBinormal = cross(o.worldNormal, o.worldTangent) * v.tangent.w;
 
                 return o;
@@ -261,23 +266,23 @@ Shader "Character/StatueBmp" {
 
             v2f_prepass_final vert_prepass_final (appdata_prepass v) {
                 v2f_prepass_final o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
-                o.worldPos = mul(_Object2World, v.vertex).xyz;
+                o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.screenPos = ComputeScreenPos(o.pos);
 
                 TANGENT_SPACE_ROTATION;
 
-                float3 worldXInObj = _Object2World[0].xyz;
-                float3 worldYInObj = _Object2World[1].xyz;
-                float3 worldZInObj = _Object2World[2].xyz;
+                float3 worldXInObj = unity_ObjectToWorld[0].xyz;
+                float3 worldYInObj = unity_ObjectToWorld[1].xyz;
+                float3 worldZInObj = unity_ObjectToWorld[2].xyz;
 
-                o.worldXTangent = mul(rotation, worldXInObj * unity_Scale.w);
-                o.worldYTangent = mul(rotation, worldYInObj * unity_Scale.w);
-                o.worldZTangent = mul(rotation, worldZInObj * unity_Scale.w);
+                o.worldXTangent = mul(rotation, worldXInObj * 1.0);
+                o.worldYTangent = mul(rotation, worldYInObj * 1.0);
+                o.worldZTangent = mul(rotation, worldZInObj * 1.0);
 
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal * 1.0));
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
 
                 return o;

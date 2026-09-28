@@ -47,9 +47,9 @@ public class ExplosionPulse : MonoBehaviour
 		num *= num4;
 		num2 *= num4;
 		num3 *= num4;
-		base.renderer.material.SetVector("_ChannelFactor", new Vector4(num, num2, num3, 0f));
+		base.GetComponent<Renderer>().material.SetVector("_ChannelFactor", new Vector4(num, num2, num3, 0f));
 		base.transform.localScale = Vector3.Slerp(base.transform.localScale, targetSize, Expansion * Time.deltaTime * duration * 2f);
-		base.renderer.material.SetVector("_Range", new Vector4(rangeX, rangeY, 0f, 1f));
+		base.GetComponent<Renderer>().material.SetVector("_Range", new Vector4(rangeX, rangeY, 0f, 1f));
 		duration += Time.deltaTime;
 		if (duration > EvaporationDelay)
 		{

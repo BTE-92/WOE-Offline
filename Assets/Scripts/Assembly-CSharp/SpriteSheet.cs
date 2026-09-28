@@ -83,8 +83,8 @@ public class SpriteSheet
         m_camera = _camera;
         m_gameObject = new GameObject("SpriteSheet");
         m_gameObject.layer = m_camera.gameObject.layer;
-        m_meshFilter = m_gameObject.AddComponent("MeshFilter") as MeshFilter;
-        m_meshRenderer = m_gameObject.AddComponent("MeshRenderer") as MeshRenderer;
+        m_meshFilter = m_gameObject.AddComponent<MeshFilter>() as MeshFilter;
+        m_meshRenderer = m_gameObject.AddComponent<MeshRenderer>() as MeshRenderer;
         m_material = _material;
         m_textureWidth = 0;
         m_textureHeight = 0;
@@ -104,7 +104,7 @@ public class SpriteSheet
         m_mesh = m_meshFilter.mesh;
         m_mesh.MarkDynamic();
         m_meshRenderer.bounds.SetMinMax(new Vector3(float.MinValue, float.MinValue, float.MinValue), new Vector3(float.MaxValue, float.MaxValue, float.MaxValue));
-        m_meshRenderer.renderer.material = m_material;
+        m_meshRenderer.GetComponent<Renderer>().material = m_material;
         m_globalSpriteScale = _globalSpriteScale;
         m_gameObject.transform.position = Vector3.zero;
         m_components = new DynamicArray<SpriteC>();

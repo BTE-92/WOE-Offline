@@ -76,7 +76,7 @@ Shader "Character/Ghost Shader" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
@@ -107,7 +107,7 @@ Shader "Character/Ghost Shader" {
                 // 4. Diffuse Lambert Lighting
                 float3 lightDir = normalize(i.lightDir);
                 float NdotL = max(0.0, dot(normalTangent, lightDir));
-                half3 directLight = diffColor * _LightColor0.rgb * (NdotL * 2.0);
+                half3 directLight = diffColor * _LightColor0.rgb * NdotL;
 
                 // 5. Final output
                 fixed4 c;
@@ -169,7 +169,7 @@ Shader "Character/Ghost Shader" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
@@ -204,7 +204,7 @@ Shader "Character/Ghost Shader" {
 
                 // In ForwardAdd, rimColor is not added to RGB, only used for alpha
                 fixed4 c;
-                c.rgb = diffColor * _LightColor0.rgb * (NdotL * atten * 2.0);
+                c.rgb = diffColor * _LightColor0.rgb * (NdotL * atten);
                 c.a = alpha;
                 return c;
             }

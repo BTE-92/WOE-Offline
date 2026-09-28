@@ -29,32 +29,10 @@ public static class IpConfig //Added purely for convienience of using custom ser
 		}
 	}
 
-#if UNITY_ANDROID && !UNITY_EDITOR
-private static string ConfigDirectory
-{
-	get
-	{
-		using (AndroidJavaClass unityPlayer =
-			new AndroidJavaClass("com.unity3d.player.UnityPlayer"))
-		{
-			using (AndroidJavaObject activity =
-				unityPlayer.GetStatic<AndroidJavaObject>("currentActivity"))
-			{
-				using (AndroidJavaObject externalFilesDir =
-					activity.Call<AndroidJavaObject>("getExternalFilesDir", null))
-				{
-					return externalFilesDir.Call<string>("getAbsolutePath");
-				}
-			}
-		}
-	}
-}
-#else
     private static string ConfigDirectory
     {
         get { return Application.persistentDataPath; }
     }
-#endif
 
     private static string ConfigPath
 	{

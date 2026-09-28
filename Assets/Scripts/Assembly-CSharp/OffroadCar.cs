@@ -455,7 +455,7 @@ public class OffroadCar : Vehicle
 				}
 				else if (m_drivingFx != null)
 				{
-					ParticleSystem particleSystem = m_drivingFx.p_gameObject.particleSystem;
+					ParticleSystem particleSystem = m_drivingFx.p_gameObject.GetComponent<ParticleSystem>();
 					if (m_drivingFxName.Equals("ParticleFx/MudSplatter"))
 					{
 						if (!flag5 && m_skiddingEndTimer == 0 && particleSystem.isPlaying)
@@ -521,7 +521,7 @@ public class OffroadCar : Vehicle
 		{
 			TimerC timerC = TimerS.AddComponent(m_entity, "RemoveTimerForDriveFxEmitter", 2f, 0f, false, RemoveDriveFxTimerDelegate);
 			timerC.customComponent = m_drivingFx;
-			m_drivingFx.p_gameObject.particleSystem.Stop();
+			m_drivingFx.p_gameObject.GetComponent<ParticleSystem>().Stop();
 			m_drivingFx = null;
 			m_drivingFxName = string.Empty;
 		}

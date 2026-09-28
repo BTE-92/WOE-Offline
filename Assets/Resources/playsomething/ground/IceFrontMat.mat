@@ -2,98 +2,47 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!21 &2100000
 Material:
-  serializedVersion: 3
+  serializedVersion: 6
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
   m_Name: IceFrontMat
   m_Shader: {fileID: 4800000, guid: 365c96be1cc8baa4482a5f27a4a2e38e, type: 3}
-  m_ShaderKeywords: []
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
   m_SavedProperties:
-    serializedVersion: 2
+    serializedVersion: 3
     m_TexEnvs:
-      data:
-        first:
-          name: _MainTex
-        second:
-          m_Texture: {fileID: 2800000, guid: e3a44c2827889d649989a832831f1c4a, type: 3}
-          m_Scale: {x: .5, y: .5}
-          m_Offset: {x: 0, y: 0}
-      data:
-        first:
-          name: _MaskTex
-        second:
-          m_Texture: {fileID: 0}
-          m_Scale: {x: 1, y: 1}
-          m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: e3a44c2827889d649989a832831f1c4a, type: 3}
+        m_Scale: {x: 0.5, y: 0.5}
+        m_Offset: {x: 0, y: 0}
+    - _MaskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Floats:
-      data:
-        first:
-          name: _Cutoff
-        second: .5
-      data:
-        first:
-          name: _Shininess
-        second: .180171087
-      data:
-        first:
-          name: _Tiling
-        second: .200000003
-      data:
-        first:
-          name: _EdgeTreshold
-        second: .4030357
-      data:
-        first:
-          name: _OffsetX
-        second: -30
-      data:
-        first:
-          name: _OffsetY
-        second: -30
-      data:
-        first:
-          name: _Parallax
-        second: .0199999996
-      data:
-        first:
-          name: _ReflectionStrength
-        second: 1
-      data:
-        first:
-          name: _Opacity
-        second: .5
-      data:
-        first:
-          name: _FPOW
-        second: 5
-      data:
-        first:
-          name: _R0
-        second: .0500000007
-      data:
-        first:
-          name: _LightStr
-        second: 1
+    - _Cutoff: 0.5
+    - _EdgeTreshold: 0.4030357
+    - _FPOW: 5
+    - _LightStr: 1
+    - _OffsetX: -30
+    - _OffsetY: -30
+    - _Opacity: 0.5
+    - _Parallax: 0.02
+    - _R0: 0.05
+    - _ReflectionStrength: 1
+    - _Shininess: 0.18017109
+    - _Tiling: 0.2
     m_Colors:
-      data:
-        first:
-          name: _Color
-        second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
-          name: _SpecColor
-        second: {r: 1, g: 1, b: 1, a: 1}
-      data:
-        first:
-          name: _Emission
-        second: {r: 0, g: 0, b: 0, a: 1}
-      data:
-        first:
-          name: _EdgeColor
-        second: {r: .632569194, g: .835475981, b: .95588237, a: 0}
-      data:
-        first:
-          name: _ReflectColor
-        second: {r: 1, g: 1, b: 1, a: .5}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EdgeColor: {r: 0.6325692, g: 0.835476, b: 0.9558824, a: 0}
+    - _Emission: {r: 0, g: 0, b: 0, a: 1}
+    - _ReflectColor: {r: 1, g: 1, b: 1, a: 0.5}
+    - _SpecColor: {r: 1, g: 1, b: 1, a: 1}

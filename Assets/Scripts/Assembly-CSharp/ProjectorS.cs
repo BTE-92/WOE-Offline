@@ -29,7 +29,7 @@ public static class ProjectorS
 		ProjectorC projectorC = m_components.AddItem();
 		projectorC.p_TC = _parentTC;
 		GameObject gameObject = new GameObject(_parentTC.transform.name + " shadow");
-		projectorC.m_projector = gameObject.AddComponent("Projector") as Projector;
+		projectorC.m_projector = gameObject.AddComponent<Projector>() as Projector;
 		projectorC.m_projector.material = _mat;
 		projectorC.m_projector.ignoreLayers = _ignoreLayers;
 		projectorC.m_projector.gameObject.transform.Rotate(new Vector3(90f, 0f, 0f));

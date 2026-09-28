@@ -82,7 +82,7 @@ Shader "Character/Hologram" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
@@ -91,10 +91,7 @@ Shader "Character/Hologram" {
                 // Build tangent space transformation matrix
                 TANGENT_SPACE_ROTATION;
                 o.viewDir = mul(rotation, ObjSpaceViewDir(v.vertex));
-                
-                // Reconstruct exact vertex math for lightDir
-                float3 objLightDir = mul(_World2Object, _WorldSpaceLightPos0).xyz;
-                o.lightDir = mul(rotation, objLightDir);
+                o.lightDir = mul(rotation, ObjSpaceLightDir(v.vertex));
 
                 return o;
             }
@@ -122,7 +119,7 @@ Shader "Character/Hologram" {
                 // 4. Lambertian Diffuse Lighting
                 float3 lightDir = normalize(i.lightDir);
                 float NdotL = max(0.0, dot(normalTangent, lightDir));
-                half3 directLight = basecol.rgb * _LightColor0.rgb * (NdotL * 2.0);
+                half3 directLight = basecol.rgb * _LightColor0.rgb * NdotL;
 
                 // 5. Final Composition
                 fixed4 c;
@@ -188,7 +185,7 @@ Shader "Character/Hologram" {
 
             v2f vert (appdata v) {
                 v2f o;
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
@@ -196,16 +193,9 @@ Shader "Character/Hologram" {
 
                 TANGENT_SPACE_ROTATION;
                 
-                // View direction in tangent space
-                float3 objViewDir = mul(_World2Object, float4(_WorldSpaceCameraPos, 1.0)).xyz * unity_Scale.w - v.vertex.xyz;
-                o.viewDir = mul(rotation, objViewDir);
-
-                // Light direction in tangent space (vector to light source for point/spot, or light direction for directional)
-                float3 objLightVec = mul(_World2Object, _WorldSpaceLightPos0).xyz;
-                if (_WorldSpaceLightPos0.w > 0.0) {
-                    objLightVec = objLightVec * unity_Scale.w - v.vertex.xyz;
-                }
-                o.lightDir = mul(rotation, objLightVec);
+                // View and Light direction transformed to tangent space using standard helpers
+                o.viewDir = mul(rotation, ObjSpaceViewDir(v.vertex));
+                o.lightDir = mul(rotation, ObjSpaceLightDir(v.vertex));
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
                 return o;
@@ -238,7 +228,7 @@ Shader "Character/Hologram" {
 
                 // 5. Output composition (diffuse lighting only, rim color is already added in ForwardBase)
                 fixed4 c;
-                c.rgb = basecol.rgb * _LightColor0.rgb * (NdotL * atten * 2.0);
+                c.rgb = basecol.rgb * _LightColor0.rgb * (NdotL * atten);
                 c.a = mixedColor.r;
                 return c;
             }

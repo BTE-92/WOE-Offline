@@ -56,11 +56,10 @@ Shader "Character/CharShader-lambertwrap" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
 
-                // Transform normal preserving Scale scale factor
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.worldNormal = worldNormal;
 
                 #ifndef LIGHTMAP_ON
@@ -102,8 +101,8 @@ Shader "Character/CharShader-lambertwrap" {
                 float3 lightDir = _WorldSpaceLightPos0.xyz;
                 fixed shadow = SHADOW_ATTENUATION(i);
 
-                // Half-lambert wrapping formulation: (N·L * 0.5 + 0.5) * 2.0
-                half NdotLWrap = (dot(normal, lightDir) * 0.5 + 0.5) * 2.0;
+                // Standard Half-lambert wrapping formulation: (N·L * 0.5 + 0.5)
+                half NdotLWrap = dot(normal, lightDir) * 0.5 + 0.5;
 
                 fixed4 c;
                 c.rgb = (albedo * _LightColor0.rgb) * (NdotLWrap * shadow);
@@ -163,11 +162,11 @@ Shader "Character/CharShader-lambertwrap" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
-                o.worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                o.worldNormal = UnityObjectToWorldNormal(v.normal);
 
-                float3 worldPos = mul(_Object2World, v.vertex).xyz;
+                float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
                 o.lightDir = _WorldSpaceLightPos0.xyz - worldPos * _WorldSpaceLightPos0.w;
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
@@ -198,7 +197,7 @@ Shader "Character/CharShader-lambertwrap" {
                 float3 lightDir = normalize(i.lightDir);
                 fixed atten = LIGHT_ATTENUATION(i);
 
-                half NdotLWrap = (dot(normal, lightDir) * 0.5 + 0.5) * 2.0;
+                half NdotLWrap = dot(normal, lightDir) * 0.5 + 0.5;
 
                 fixed4 c;
                 c.rgb = (albedo * _LightColor0.rgb) * (NdotLWrap * atten);

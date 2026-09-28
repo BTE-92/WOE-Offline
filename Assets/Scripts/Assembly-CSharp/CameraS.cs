@@ -106,7 +106,7 @@ public static class CameraS
 		m_mainCameraRotateTC.transform.localPosition = Vector3.zero;
 		m_mainCameraRotateTC.transform.localRotation = Quaternion.Euler(m_mainCameraAngle);
 		GameObject gameObject = new GameObject("UI Camera");
-		m_uiCamera = gameObject.AddComponent("Camera") as Camera;
+		m_uiCamera = gameObject.AddComponent<Camera>() as Camera;
 		m_uiCamera.orthographic = true;
 		m_uiCamera.orthographicSize = (float)Screen.height * 0.5f;
 		m_uiCamera.depth = 1f;
@@ -142,7 +142,7 @@ public static class CameraS
 	public static Camera AddCamera(string _name, bool _ortographic)
 	{
 		GameObject gameObject = new GameObject(_name);
-		Camera camera = gameObject.AddComponent("Camera") as Camera;
+		Camera camera = gameObject.AddComponent<Camera>() as Camera;
 		camera.depth = 1f;
 		camera.gameObject.transform.position = new Vector3(0f, 0f, -500f);
 		camera.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);

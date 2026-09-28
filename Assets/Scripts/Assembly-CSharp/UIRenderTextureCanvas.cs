@@ -33,7 +33,7 @@ public class UIRenderTextureCanvas : UIScrollableCanvas
 			m_renderTextureCamera.clearFlags = CameraClearFlags.Color;
 			m_renderTextureCamera.backgroundColor = new Color(1f, 1f, 1f, 1f);
 		}
-		m_rtbs = m_renderTextureCamera.gameObject.AddComponent("RenderToTextureBootstrap") as RenderToTextureBootstrap;
+		m_rtbs = m_renderTextureCamera.gameObject.AddComponent<RenderToTextureBootstrap>() as RenderToTextureBootstrap;
 		m_rtbs.m_uiRenderTextureCanvas = this;
 	}
 
@@ -88,7 +88,7 @@ public class UIRenderTextureCanvas : UIScrollableCanvas
 		m_renderTextureCamera.enabled = false;
 		PrefabS.RemoveComponentsByEntity(m_TC.p_entity);
 		m_drawRect = PrefabS.CreateRect(m_TC, Vector3.zero, Mathf.CeilToInt(m_actualWidth), Mathf.CeilToInt(m_actualHeight), Color.white, ResourceManager.GetMaterial("Framework/SolidMat"), m_camera);
-		m_drawRect.p_gameObject.renderer.material.mainTexture = m_finalTexture;
+		m_drawRect.p_gameObject.GetComponent<Renderer>().material.mainTexture = m_finalTexture;
 		Debug.Log("post");
 	}
 

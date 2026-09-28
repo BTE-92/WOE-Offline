@@ -74,50 +74,56 @@ public sealed class FB : ScriptableObject
 
 		protected abstract string className { get; }
 
-		public static IEnumerator LoadFacebookClass(string className, LoadedDllCallback callback)
-		{
-			string url = string.Format(IntegratedPluginCanvasLocation.DllUrl, className);
-			WWW www = new WWW(url);
-			FbDebug.Log("loading dll: " + url);
-			yield return www;
-			if (www.error != null)
-			{
-				FbDebug.Error(www.error);
-				if (retryLoadCount < 3)
-				{
-					retryLoadCount++;
-				}
-				www.Dispose();
-				yield break;
-			}
-			Assembly assembly = Security.LoadAndVerifyAssembly(www.bytes);
-			if (assembly == null)
-			{
-				FbDebug.Error("Could not securely load assembly from " + url);
-				www.Dispose();
-				yield break;
-			}
-			Type facebookClass = assembly.GetType("Facebook." + className);
-			if (facebookClass == null)
-			{
-				FbDebug.Error(className + " not found in assembly!");
-				www.Dispose();
-				yield break;
-			}
-			IFacebook fb = typeof(FBComponentFactory).GetMethod("GetComponent").MakeGenericMethod(facebookClass).Invoke(null, new object[1] { IfNotExist.AddNew }) as IFacebook;
-			if (fb == null)
-			{
-				FbDebug.Error(className + " couldn't be created.");
-				www.Dispose();
-			}
-			else
-			{
-				callback(fb);
-				www.Dispose();
-			}
-		}
+        public static IEnumerator LoadFacebookClass(string className, LoadedDllCallback callback)
+        {
+            string url = string.Format(IntegratedPluginCanvasLocation.DllUrl, className);
+            WWW www = new WWW(url);
+            FbDebug.Log("loading dll: " + url);
+            yield return www;
+            if (www.error != null)
+            {
+                FbDebug.Error(www.error);
+                if (retryLoadCount < 3)
+                {
+                    retryLoadCount++;
+                }
+                www.Dispose();
+                yield break;
+            }
 
-		private IEnumerator Start()
+            Assembly assembly = Assembly.Load(www.bytes);
+            if (assembly == null)
+            {
+                FbDebug.Error("Could not securely load assembly from " + url);
+                www.Dispose();
+                yield break;
+            }
+
+            Type facebookClass = assembly.GetType("Facebook." + className);
+            if (facebookClass == null)
+            {
+                FbDebug.Error(className + " not found in assembly!");
+                www.Dispose();
+                yield break;
+            }
+
+            IFacebook fb = typeof(FBComponentFactory).GetMethod("GetComponent")
+                .MakeGenericMethod(facebookClass)
+                .Invoke(null, new object[1] { IfNotExist.AddNew }) as IFacebook;
+
+            if (fb == null)
+            {
+                FbDebug.Error(className + " couldn't be created.");
+                www.Dispose();
+            }
+            else
+            {
+                callback(fb);
+                www.Dispose();
+            }
+        }
+
+        private IEnumerator Start()
 		{
 			IEnumerator loader = LoadFacebookClass(className, OnDllLoaded);
 			while (loader.MoveNext())

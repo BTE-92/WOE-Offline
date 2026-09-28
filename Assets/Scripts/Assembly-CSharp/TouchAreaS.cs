@@ -202,11 +202,11 @@ public static class TouchAreaS
         touchAreaC.m_camera = _camera;
         touchAreaC.m_name = _name;
         GameObject gameObject = touchAreaC.m_TC.transform.gameObject;
-        MeshCollider meshCollider = gameObject.AddComponent("MeshCollider") as MeshCollider;
+        MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>() as MeshCollider;
         meshCollider.sharedMesh = GetRectMesh(_width, _height);
         touchAreaC.m_collider = meshCollider;
         touchAreaC.m_colliderShape = ColliderShape.Rect;
-        TouchAreaBootstrap touchAreaBootstrap = gameObject.AddComponent("TouchAreaBootstrap") as TouchAreaBootstrap;
+        TouchAreaBootstrap touchAreaBootstrap = gameObject.AddComponent<TouchAreaBootstrap>() as TouchAreaBootstrap;
         touchAreaBootstrap.m_TAC = touchAreaC;
         EntityManager.AddComponentToEntity(_tc.p_entity, touchAreaC);
         return touchAreaC;
@@ -222,11 +222,11 @@ public static class TouchAreaS
         touchAreaC.m_camera = _camera;
         touchAreaC.m_name = _name;
         GameObject gameObject = touchAreaC.m_TC.transform.gameObject;
-        MeshCollider meshCollider = gameObject.AddComponent("MeshCollider") as MeshCollider;
+        MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>() as MeshCollider;
         meshCollider.sharedMesh = GetCircleMesh(_radius);
         touchAreaC.m_collider = meshCollider;
         touchAreaC.m_colliderShape = ColliderShape.Circle;
-        TouchAreaBootstrap touchAreaBootstrap = gameObject.AddComponent("TouchAreaBootstrap") as TouchAreaBootstrap;
+        TouchAreaBootstrap touchAreaBootstrap = gameObject.AddComponent<TouchAreaBootstrap>() as TouchAreaBootstrap;
         touchAreaBootstrap.m_TAC = touchAreaC;
         EntityManager.AddComponentToEntity(_tc.p_entity, touchAreaC);
         return touchAreaC;
@@ -246,11 +246,11 @@ public static class TouchAreaS
         touchAreaC.m_camera = _camera;
         touchAreaC.m_name = _name;
         GameObject gameObject = touchAreaC.m_TC.transform.gameObject;
-        MeshCollider meshCollider = gameObject.AddComponent("MeshCollider") as MeshCollider;
+        MeshCollider meshCollider = gameObject.AddComponent<MeshCollider>() as MeshCollider;
         meshCollider.sharedMesh = _mesh;
         touchAreaC.m_collider = meshCollider;
         touchAreaC.m_colliderShape = ColliderShape.Mesh;
-        TouchAreaBootstrap touchAreaBootstrap = gameObject.AddComponent("TouchAreaBootstrap") as TouchAreaBootstrap;
+        TouchAreaBootstrap touchAreaBootstrap = gameObject.AddComponent<TouchAreaBootstrap>() as TouchAreaBootstrap;
         touchAreaBootstrap.m_TAC = touchAreaC;
         EntityManager.AddComponentToEntity(_tc.p_entity, touchAreaC);
         return touchAreaC;
@@ -458,7 +458,7 @@ public static class TouchAreaS
                     Vector3 position = camera.transform.position;
                     Vector3 direction = touchWorldPos - position;
                     RaycastHit[] array = null;
-                    if (camera.isOrthoGraphic)
+                    if (camera.orthographic)
                     {
                         Vector3 vector = -touchWorldPos + position * 2f;
                         vector.z = position.z;
@@ -480,7 +480,7 @@ public static class TouchAreaS
                         RaycastHit raycastHit = array[k];
                         TouchAreaBootstrap touchAreaBootstrap = raycastHit.transform.GetComponent("TouchAreaBootstrap") as TouchAreaBootstrap;
                         TouchAreaC tAC = touchAreaBootstrap.m_TAC;
-                        if ((camera.isOrthoGraphic && tAC.m_clip && !ChipmunkProWrapper.ucpBBContainsVect(tAC.m_clipBB, touch.position)) || !tAC.m_active)
+                        if ((camera.orthographic && tAC.m_clip && !ChipmunkProWrapper.ucpBBContainsVect(tAC.m_clipBB, touch.position)) || !tAC.m_active)
                         {
                             continue;
                         }

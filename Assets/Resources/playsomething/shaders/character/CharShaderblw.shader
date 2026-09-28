@@ -60,18 +60,16 @@ Shader "Character/CharShader-bumped-lambertwrap" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
                 // Build tangent space rotation matrix to transform object-space light dir
                 TANGENT_SPACE_ROTATION;
-                float3 objLightDir = mul(_World2Object, _WorldSpaceLightPos0).xyz;
-                o.lightDirTangent = mul(rotation, objLightDir);
+                o.lightDirTangent = mul(rotation, ObjSpaceLightDir(v.vertex));
 
                 #ifndef LIGHTMAP_ON
-                // Calculate world normal using scale modifier
-                float3 worldNormal = normalize(mul((float3x3)_Object2World, v.normal * unity_Scale.w));
+                float3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 o.shLight = ShadeSH9(float4(worldNormal, 1.0));
                 #endif
 
@@ -110,8 +108,8 @@ Shader "Character/CharShader-bumped-lambertwrap" {
                 float3 lightDir = normalize(i.lightDirTangent);
                 fixed shadow = SHADOW_ATTENUATION(i);
 
-                // Half-lambert wrapping formulation: (N·L * 0.5 + 0.5) * shadow * 2.0
-                half NdotLWrap = (dot(normalTangent, lightDir) * 0.5 + 0.5) * shadow * 2.0;
+                // Half-lambert wrapping formulation: (N·L * 0.5 + 0.5) * shadow
+                half NdotLWrap = (dot(normalTangent, lightDir) * 0.5 + 0.5) * shadow;
 
                 fixed4 c;
                 c.rgb = (albedo * _LightColor0.rgb) * NdotLWrap;
@@ -173,18 +171,12 @@ Shader "Character/CharShader-bumped-lambertwrap" {
                 v2f o;
                 UNITY_INITIALIZE_OUTPUT(v2f, o);
 
-                o.pos = mul(UNITY_MATRIX_MVP, v.vertex);
+                o.pos = UnityObjectToClipPos(v.vertex);
                 o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
                 o.uv.zw = TRANSFORM_TEX(v.texcoord, _BumpMap);
 
                 TANGENT_SPACE_ROTATION;
-
-                // Handle local position offset vector conversion for point/spot lights
-                float3 objLightVec = mul(_World2Object, _WorldSpaceLightPos0).xyz;
-                if (_WorldSpaceLightPos0.w > 0.0) {
-                    objLightVec = objLightVec * unity_Scale.w - v.vertex.xyz;
-                }
-                o.lightDirTangent = mul(rotation, objLightVec);
+                o.lightDirTangent = mul(rotation, ObjSpaceLightDir(v.vertex));
 
                 TRANSFER_VERTEX_TO_FRAGMENT(o);
                 return o;
@@ -214,7 +206,7 @@ Shader "Character/CharShader-bumped-lambertwrap" {
                 float3 lightDir = normalize(i.lightDirTangent);
                 fixed atten = LIGHT_ATTENUATION(i);
 
-                half NdotLWrap = (dot(normalTangent, lightDir) * 0.5 + 0.5) * atten * 2.0;
+                half NdotLWrap = (dot(normalTangent, lightDir) * 0.5 + 0.5) * atten;
 
                 fixed4 c;
                 c.rgb = (albedo * _LightColor0.rgb) * NdotLWrap;
