@@ -1,40 +1,41 @@
-# What on Earth Decompiled
+# What On Earth Decompiled
 
-This repo contains a decompilation for the earliest version of the game **Big Bang Racing** by Traplight Games. The game was originally called **What on Earth**.
+This repo contains an updated version of the existing **What On Earth 0.4.0 decompilation**, migrated to **Unity 2018.4.8f1**.
 
-The decompiled build in this repo is from a 2014 iOS TestFlight build of the game, which happens to be the only early build I could find.
-
-> **📦 Game Version: `0.4.0`**
-
-[Click here to download the original IPA (32-bit)](https://archive.org/download/traplight-whatonearth/WhatOnEarth_%28com.traplight.whatonearth%29_0.4.0.ipa)
-
-# ⚠️ Notice
-
-* This game originally used **Unity 4.3.2f1**, but has been updated to **Unity 4.7.2f1** (the closest version I already had).
-
-> ⚠️ **IMPORTANT: This game is NOT OFFLINE.**
+> ⚠️ **IMPORTANT: THIS GAME IS NOT OFFLINE.**
 >
-> You will need to use [this server](https://github.com/BTE-92/What-On-Earth-Server) in order to actually play the game.
+> You **must** use [this server](https://github.com/BTE-92/What-On-Earth-Server) in order to actually play the game.
 >
-> **If you don't use the server, the game will not work.**
+> **Without the server, the game will not work.**
 
-* Currently, you can only build for **Windows** because of plugins. Android support is buggy on newer Android versions; **using Android 4.4 seems to be the most stable** for Android builds.
+# ⚠️ Important Information Before You Start
 
-* There are some possible enhancements to make (e.g. upgrading Unity or updating the FMOD version).
+* This project is a **Unity project**, not a standalone game.
+* You currently need to build for **Windows** because of required plugins.
+* Android support is buggy on newer Android versions. **Android 4.4 appears to be the most stable version** for Android builds.
+* You should use the exact Unity version listed below. Other versions may cause compatibility issues.
 
-* Some enhancements have been made to this source which includes: Adding mouse support, Adding a config file which generates on the persistent path to make server url changing easier.
+# 🛠️ How to Open the Project
 
-# Unity Setup
+## 1. Install Unity 2018.4.8f1
 
-For this project, I'd recommend using **Unity 4.7.2f1**, since that is the version I used. Later versions might cause compatibility issues, as well as opening the project in earlier versions.
+I recommend using **Unity 2018.4.8f1**, as this is the exact version I used when migrating the project.
 
-You can get previous Unity versions here:
+Using a later or earlier version may cause compatibility issues.
 
-https://forum.unity.com/threads/early-unity-versions-downloads.1483758/
+[Click here to download Unity 2018.4.8f1](https://unity.com/releases/editor/whats-new/2018.4.8f1#installers)
 
-# Controls
+## 2. Open the Project
 
-Assuming you are on PC, here are the controls for the editor:
+After installing Unity 2018.4.8f1, open this repository as a Unity project.
+
+> **You do not need to install Unity if you only want to download and play a compiled build. [Click this text to see compiled builds](https://github.com/Dodonickey/WOE-Decompiled/releases)**
+>
+> Unity is only required if you want to **open, modify, or build the project yourself**.
+
+# 🎮 Controls
+
+If you're running the game in the **Unity Editor on PC**, these are the controls:
 
 * **A** — Zoom in
 * **Z** — Zoom out
