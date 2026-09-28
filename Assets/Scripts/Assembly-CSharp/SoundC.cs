@@ -26,8 +26,8 @@ public class SoundC : BasicComponent
 		isPlaying = false;
 		isPaused = false;
 		forceAtListenerPosition = false;
-		eventInstance = null;
-	}
+		eventInstance = default(EventInstance);
+    }
 
 	~SoundC()
 	{
