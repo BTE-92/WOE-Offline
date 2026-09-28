@@ -46,6 +46,10 @@ public static class TouchAreaS
 
     public static void Initialize()
     {
+        // FIX: stop Unity from turning real finger touches into fake mouse events.
+        // Without this, every finger on a touchscreen was added twice (real touch + fingerId 99).
+        Input.simulateMouseWithTouches = false;
+
         m_touches = new DynamicArray<TLTouch>(10);
         m_touchRemoveList = new List<TLTouch>();
         m_areas = new DynamicArray<TouchAreaC>();
@@ -380,7 +384,11 @@ public static class TouchAreaS
         }
 
         // 2. Mouse Emulation (Unity Editor / PC / Mac)
-        if (Input.GetMouseButtonDown(0))
+        // FIX: only start a new mouse touch when there are no real touches.
+        // An already-active mouse drag still runs below so it always gets its Ended phase.
+        bool mouseAllowed = realTouchCount == 0;
+
+        if (mouseAllowed && Input.GetMouseButtonDown(0))
         {
             m_mouseActive = true;
             CustomTouch ct = default(CustomTouch);
