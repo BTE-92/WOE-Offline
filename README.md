@@ -6,7 +6,7 @@ The decompiled build in this repo is from a 2014 iOS TestFlight build of the gam
 
 > **📦 Game Version: `0.4.0`**
 
-[Click here to download the IPA (32-bit)](https://archive.org/download/traplight-whatonearth/WhatOnEarth_%28com.traplight.whatonearth%29_0.4.0.ipa)
+[Click here to download the original IPA (32-bit)](https://archive.org/download/traplight-whatonearth/WhatOnEarth_%28com.traplight.whatonearth%29_0.4.0.ipa)
 
 # ⚠️ Notice
 
@@ -21,6 +21,8 @@ The decompiled build in this repo is from a 2014 iOS TestFlight build of the gam
 * Currently, you can only build for **Windows** because of plugins. Android support is buggy on newer Android versions; **using Android 4.4 seems to be the most stable** for Android builds.
 
 * There are some possible enhancements to make (e.g. upgrading Unity or updating the FMOD version).
+
+* Some enhancements have been made to this source which includes: Adding mouse support, Adding a config file which generates on the persistent path to make server url changing easier.
 
 # Unity Setup
 
