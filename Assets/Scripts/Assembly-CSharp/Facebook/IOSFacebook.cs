@@ -61,40 +61,69 @@ namespace Facebook
 			}
 		}
 
-		[DllImport("__Internal")]
-		private static extern void iosInit(bool cookie, bool logging, bool status, bool frictionlessRequests, string urlSuffix);
+#if UNITY_IOS && !UNITY_EDITOR
 
-		[DllImport("__Internal")]
-		private static extern void iosLogin(string scope);
+[DllImport("__Internal")]
+private static extern void iosInit(bool cookie, bool logging, bool status, bool frictionlessRequests, string urlSuffix);
 
-		[DllImport("__Internal")]
-		private static extern void iosLogout();
+[DllImport("__Internal")]
+private static extern void iosLogin(string scope);
 
-		[DllImport("__Internal")]
-		private static extern void iosSetShareDialogMode(int mode);
+[DllImport("__Internal")]
+private static extern void iosLogout();
 
-		[DllImport("__Internal")]
-		private static extern void iosFeedRequest(int requestId, string toId, string link, string linkName, string linkCaption, string linkDescription, string picture, string mediaSource, string actionName, string actionLink, string reference);
+[DllImport("__Internal")]
+private static extern void iosSetShareDialogMode(int mode);
 
-		[DllImport("__Internal")]
-		private static extern void iosAppRequest(int requestId, string message, string[] to = null, int toLength = 0, string filters = "", string[] excludeIds = null, int excludeIdsLength = 0, bool hasMaxRecipients = false, int maxRecipients = 0, string data = "", string title = "");
+[DllImport("__Internal")]
+private static extern void iosFeedRequest(int requestId, string toId, string link, string linkName, string linkCaption, string linkDescription, string picture, string mediaSource, string actionName, string actionLink, string reference);
 
-		[DllImport("__Internal")]
-		private static extern void iosFBSettingsPublishInstall(int requestId, string appId);
+[DllImport("__Internal")]
+private static extern void iosAppRequest(int requestId, string message, string[] to = null, int toLength = 0, string filters = "", string[] excludeIds = null, int excludeIdsLength = 0, bool hasMaxRecipients = false, int maxRecipients = 0, string data = "", string title = "");
 
-		[DllImport("__Internal")]
-		private static extern void iosFBAppEventsLogEvent(string logEvent, double valueToSum, int numParams, string[] paramKeys, string[] paramVals);
+[DllImport("__Internal")]
+private static extern void iosFBSettingsPublishInstall(int requestId, string appId);
 
-		[DllImport("__Internal")]
-		private static extern void iosFBAppEventsLogPurchase(double logPurchase, string currency, int numParams, string[] paramKeys, string[] paramVals);
+[DllImport("__Internal")]
+private static extern void iosFBAppEventsLogEvent(string logEvent, double valueToSum, int numParams, string[] paramKeys, string[] paramVals);
 
-		[DllImport("__Internal")]
-		private static extern void iosFBAppEventsSetLimitEventUsage(bool limitEventUsage);
+[DllImport("__Internal")]
+private static extern void iosFBAppEventsLogPurchase(double logPurchase, string currency, int numParams, string[] paramKeys, string[] paramVals);
 
-		[DllImport("__Internal")]
-		private static extern void iosGetDeepLink();
+[DllImport("__Internal")]
+private static extern void iosFBAppEventsSetLimitEventUsage(bool limitEventUsage);
 
-		protected override void OnAwake()
+[DllImport("__Internal")]
+private static extern void iosGetDeepLink();
+
+#else
+
+        // No-op stand-ins for Android / Editor / other platforms so the project compiles.
+        private static void iosInit(bool cookie, bool logging, bool status, bool frictionlessRequests, string urlSuffix) { }
+
+        private static void iosLogin(string scope) { }
+
+        private static void iosLogout() { }
+
+        private static void iosSetShareDialogMode(int mode) { }
+
+        private static void iosFeedRequest(int requestId, string toId, string link, string linkName, string linkCaption, string linkDescription, string picture, string mediaSource, string actionName, string actionLink, string reference) { }
+
+        private static void iosAppRequest(int requestId, string message, string[] to = null, int toLength = 0, string filters = "", string[] excludeIds = null, int excludeIdsLength = 0, bool hasMaxRecipients = false, int maxRecipients = 0, string data = "", string title = "") { }
+
+        private static void iosFBSettingsPublishInstall(int requestId, string appId) { }
+
+        private static void iosFBAppEventsLogEvent(string logEvent, double valueToSum, int numParams, string[] paramKeys, string[] paramVals) { }
+
+        private static void iosFBAppEventsLogPurchase(double logPurchase, string currency, int numParams, string[] paramKeys, string[] paramVals) { }
+
+        private static void iosFBAppEventsSetLimitEventUsage(bool limitEventUsage) { }
+
+        private static void iosGetDeepLink() { }
+
+#endif
+
+        protected override void OnAwake()
 		{
 			accessToken = "NOT_USED_ON_IOS_FACEBOOK";
 		}
