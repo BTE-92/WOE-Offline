@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIDrawHandlers
@@ -90,10 +91,21 @@ public class UIDrawHandlers
 		}
 		PrefabS.CreateFlatPrefabComponentsFromVectorArray(_c.m_TC, Vector3.zero, rect, num, num, ResourceManager.GetMaterial("Framework/SolidMat"), camera, string.Empty);
 		PrefabS.CreatePathPrefabComponentFromVectorArray(_c.m_TC, Vector3.forward * -0.5f, rect, 4f, color, ResourceManager.GetMaterial("Framework/Line4Mat"), camera, Position.Center, true);
-		Color color2 = DebugDraw.GetColor(0f, 0f, 0f, 100f);
-		uint num2 = DebugDraw.ColorToUInt(color2);
-		PrefabS.CreateFlatPrefabComponentsFromVectorArray(_c.m_TC, new Vector3(0.01f * (float)Screen.height, -0.01f * (float)Screen.height), rect, num2, num2, ResourceManager.GetMaterial("Framework/SolidMat"), camera, string.Empty);
-	}
+        Color color2 = DebugDraw.GetColor(0f, 0f, 0f, 100f); // add shadow sorting logic to fix visual bug. Non existent in unity 4
+        uint num2 = DebugDraw.ColorToUInt(color2);
+
+        List<PrefabC> shadow = PrefabS.CreateFlatPrefabComponentsFromVectorArray(
+            _c.m_TC,
+            new Vector3(0.01f * (float)Screen.height, -0.01f * (float)Screen.height),
+            rect, num2, num2,
+            ResourceManager.GetMaterial("Framework/SolidMat"),
+            camera, string.Empty);
+
+        for (int i = 0; i < shadow.Count; i++)
+        {
+            shadow[i].p_gameObject.GetComponent<Renderer>().sortingOrder = -1;
+        }
+    }
 
 	public static void NegativeButton(UIComponent _c)
 	{
@@ -109,10 +121,21 @@ public class UIDrawHandlers
 		}
 		PrefabS.CreateFlatPrefabComponentsFromVectorArray(_c.m_TC, Vector3.zero, rect, num, num, ResourceManager.GetMaterial("Framework/SolidMat"), camera, string.Empty);
 		PrefabS.CreatePathPrefabComponentFromVectorArray(_c.m_TC, Vector3.forward * -0.5f, rect, 4f, color, ResourceManager.GetMaterial("Framework/Line4Mat"), camera, Position.Center, true);
-		Color color2 = DebugDraw.GetColor(0f, 0f, 0f, 100f);
-		uint num2 = DebugDraw.ColorToUInt(color2);
-		PrefabS.CreateFlatPrefabComponentsFromVectorArray(_c.m_TC, new Vector3(0.01f * (float)Screen.height, -0.01f * (float)Screen.height), rect, num2, num2, ResourceManager.GetMaterial("Framework/SolidMat"), camera, string.Empty);
-	}
+        Color color2 = DebugDraw.GetColor(0f, 0f, 0f, 100f);
+        uint num2 = DebugDraw.ColorToUInt(color2);
+
+        List<PrefabC> shadow = PrefabS.CreateFlatPrefabComponentsFromVectorArray(
+            _c.m_TC,
+            new Vector3(0.01f * (float)Screen.height, -0.01f * (float)Screen.height),
+            rect, num2, num2,
+            ResourceManager.GetMaterial("Framework/SolidMat"),
+            camera, string.Empty);
+
+        for (int i = 0; i < shadow.Count; i++)
+        {
+            shadow[i].p_gameObject.GetComponent<Renderer>().sortingOrder = -1;
+        }
+    }
 
 	public static void NeutralButton(UIComponent _c)
 	{
@@ -128,10 +151,21 @@ public class UIDrawHandlers
 		}
 		PrefabS.CreateFlatPrefabComponentsFromVectorArray(_c.m_TC, Vector3.zero, rect, num, num, ResourceManager.GetMaterial("Framework/SolidMat"), camera, string.Empty);
 		PrefabS.CreatePathPrefabComponentFromVectorArray(_c.m_TC, Vector3.forward * -0.5f, rect, 4f, color, ResourceManager.GetMaterial("Framework/Line4Mat"), camera, Position.Center, true);
-		Color color2 = DebugDraw.GetColor(0f, 0f, 0f, 100f);
-		uint num2 = DebugDraw.ColorToUInt(color2);
-		PrefabS.CreateFlatPrefabComponentsFromVectorArray(_c.m_TC, new Vector3(0.01f * (float)Screen.height, -0.01f * (float)Screen.height), rect, num2, num2, ResourceManager.GetMaterial("Framework/SolidMat"), camera, string.Empty);
-	}
+        Color color2 = DebugDraw.GetColor(0f, 0f, 0f, 100f);
+        uint num2 = DebugDraw.ColorToUInt(color2);
+
+        List<PrefabC> shadow = PrefabS.CreateFlatPrefabComponentsFromVectorArray(
+            _c.m_TC,
+            new Vector3(0.01f * (float)Screen.height, -0.01f * (float)Screen.height),
+            rect, num2, num2,
+            ResourceManager.GetMaterial("Framework/SolidMat"),
+            camera, string.Empty);
+
+        for (int i = 0; i < shadow.Count; i++)
+        {
+            shadow[i].p_gameObject.GetComponent<Renderer>().sortingOrder = -1;
+        }
+    }
 
 	public static void SelectorCancelButton(UIComponent _c)
 	{
