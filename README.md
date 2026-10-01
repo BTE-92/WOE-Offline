@@ -18,7 +18,7 @@ This repo contains an updated version of the existing **What On Earth 0.4.0 deco
 
 ## 1. Install Unity 2018.4.8f1
 
-> **You do not need to install Unity if you only want to download and play a compiled build. [Click this text to see compiled builds](https://github.com/Dodonickey/WOE-Decompiled/releases)**
+> **You do not need to install Unity if you only want to download and play the game. [Click this text to see compiled builds](https://github.com/Dodonickey/WOE-Decompiled/releases)**
 >
 > Unity is only required if you want to **open, modify, or build the project yourself**.
 
