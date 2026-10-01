@@ -11,13 +11,16 @@ This repo contains an updated version of the existing **What On Earth 0.4.0 deco
 # ⚠️ Important Information Before You Start
 
 * This project is a **Unity project**, not a standalone game.
-* You currently need to build for **Windows** because of required plugins.
-* Android support is buggy on newer Android versions. **Android 4.4 appears to be the most stable version** for Android builds.
+* You currently need to build for **Windows** or **Android** because of required plugins.
 * You should use the exact Unity version listed below. Other versions may cause compatibility issues.
 
 # 🛠️ How to Open the Project
 
 ## 1. Install Unity 2018.4.8f1
+
+> **You do not need to install Unity if you only want to download and play a compiled build. [Click this text to see compiled builds](https://github.com/Dodonickey/WOE-Decompiled/releases)**
+>
+> Unity is only required if you want to **open, modify, or build the project yourself**.
 
 I recommend using **Unity 2018.4.8f1**, as this is the exact version I used when migrating the project.
 
@@ -28,10 +31,6 @@ Using a later or earlier version may cause compatibility issues.
 ## 2. Open the Project
 
 After installing Unity 2018.4.8f1, open this repository as a Unity project.
-
-> **You do not need to install Unity if you only want to download and play a compiled build. [Click this text to see compiled builds](https://github.com/Dodonickey/WOE-Decompiled/releases)**
->
-> Unity is only required if you want to **open, modify, or build the project yourself**.
 
 # 🎮 Controls
 
