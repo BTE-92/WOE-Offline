@@ -447,4 +447,46 @@ public static class ToolBox
 		}
 		mesh.tangents = array3;
 	}
+
+    // Exact Mono 2.6 Array.Sort implementation for custom Comparisons. W AI
+    public static void LegacyArraySort<T>(T[] array, Comparison<T> comparison)
+    {
+        // Guard clause: Null or arrays with 0 or 1 item are already sorted
+        if (array == null || array.Length <= 1)
+        {
+            return;
+        }
+
+        // Start QuickSort over the full array index range (from index 0 to Length - 1)
+        QuickSortRecursive(array, 0, array.Length - 1, comparison);
+    }
+
+    private static void QuickSortRecursive<T>(T[] keys, int left, int right, Comparison<T> comparison)
+    {
+        int i = left;
+        int j = right;
+        T pivot = keys[(left + right) >> 1];
+
+        while (i <= j)
+        {
+            while (comparison(keys[i], pivot) < 0)
+                i++;
+            while (comparison(pivot, keys[j]) < 0)
+                j--;
+
+            if (i <= j)
+            {
+                T temp = keys[i];
+                keys[i] = keys[j];
+                keys[j] = temp;
+                i++;
+                j--;
+            }
+        }
+
+        if (left < j)
+            QuickSortRecursive(keys, left, j, comparison);
+        if (i < right)
+            QuickSortRecursive(keys, i, right, comparison);
+    }
 }

@@ -818,19 +818,22 @@ public static class ChipmunkProS
 		return list.ToArray();
 	}
 
-	public static Vector2[] SortVerticeArray(Vector2[] _verts)
-	{
-		Vector2 center = Vector2.zero;
-		for (int i = 0; i < _verts.Length; i++)
-		{
-			center += _verts[i];
-		}
-		center /= (float)_verts.Length;
-		Array.Sort(_verts, (Vector2 v1, Vector2 v2) => (!vertSortIsLess(v1, v2, center)) ? 1 : (-1));
-		return _verts;
-	}
+    public static Vector2[] SortVerticeArray(Vector2[] _verts)
+    {
+        Vector2 center = Vector2.zero;
+        for (int i = 0; i < _verts.Length; i++)
+        {
+            center += _verts[i];
+        }
+        center /= (float)_verts.Length;
 
-	private static bool vertSortIsLess(Vector2 a, Vector2 b, Vector2 center)
+        // Replaces Array.Sort with exact Mono 2.6 QuickSort behavior. Silly Unity 2018 changed the sorting algorithm and broke the vertex order for some meshes. This is a workaround to restore the old behavior.
+        ToolBox.LegacyArraySort(_verts, (Vector2 v1, Vector2 v2) => (!vertSortIsLess(v1, v2, center)) ? 1 : (-1));
+
+        return _verts;
+    }
+
+    private static bool vertSortIsLess(Vector2 a, Vector2 b, Vector2 center)
 	{
 		int num = (int)((a.x - center.x) * (b.y - center.y) - (b.x - center.x) * (a.y - center.y));
 		if (num < 0)

@@ -612,8 +612,10 @@ PlayerSettings:
     iOS: 0
   scriptingBackend:
     Android: 1
+    Standalone: 1
     iOS: 1
-  il2cppCompilerConfiguration: {}
+  il2cppCompilerConfiguration:
+    Standalone: 0
   managedStrippingLevel: {}
   incrementalIl2cppBuild:
     iOS: 1
