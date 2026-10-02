@@ -9,7 +9,7 @@ public class PostRequest : WWWRequest
 		m_url = _url;
 		m_destroyAfterDone = _destroyAfterDone;
 		m_tag = _tag;
-		m_WWW = new WWW(m_url, new byte[1]);
+		m_WWW = WWWResult.Post(m_url, new byte[1], null);
 		startRequest(_retryAfterFail, _retryDelaySecs);
 	}
 
@@ -22,7 +22,7 @@ public class PostRequest : WWWRequest
 		{
 			_postHeader = defaultHeaders("application/json");
 		}
-		m_WWW = new WWW(m_url, Encoding.UTF8.GetBytes(_JSON), _postHeader);
+		m_WWW = WWWResult.Post(m_url, Encoding.UTF8.GetBytes(_JSON), _postHeader);
 		startRequest(_retryAfterFail, _retryDelaySecs);
 	}
 
@@ -35,7 +35,7 @@ public class PostRequest : WWWRequest
 		{
 			_postHeader = defaultHeaders("application/octet-stream");
 		}
-		m_WWW = new WWW(m_url, _postData, _postHeader);
+		m_WWW = WWWResult.Post(m_url, _postData, _postHeader);
 		startRequest(_retryAfterFail, _retryDelaySecs);
 	}
 

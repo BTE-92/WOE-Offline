@@ -5,7 +5,7 @@ public abstract class WWWRequest
 {
 	public WWWRequestThread m_thread;
 
-	public WWW m_WWW;
+	public WWWResult m_WWW;
 
 	public string m_url;
 

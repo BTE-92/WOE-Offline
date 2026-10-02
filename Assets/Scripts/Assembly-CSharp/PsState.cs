@@ -29,6 +29,24 @@ public static class PsState
 
 	public static string m_lastDownloadedLevelId;
 
+	// Thumbnail captured when the creator wins a level that has no id yet (not saved/published). It is uploaded
+	// as soon as that same level gets an id.
+	public static byte[] m_pendingScreenshotPng;
+
+	public static object m_pendingScreenshotLevel;
+
+	public static void FlushPendingScreenshot(string _levelId)
+	{
+		byte[] png = m_pendingScreenshotPng;
+		object level = m_pendingScreenshotLevel;
+		m_pendingScreenshotPng = null;
+		m_pendingScreenshotLevel = null;
+		if (png != null && _levelId != null && object.ReferenceEquals(level, LevelManager.m_currentLevel))
+		{
+			Server.SaveScreenshot(_levelId, png, null);
+		}
+	}
+
 	public static int m_lastSentScore;
 
 	public static bool m_editorIsLefty;

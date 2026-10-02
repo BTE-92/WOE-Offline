@@ -47,7 +47,7 @@ public class WWWRequestThread : MonoBehaviour
 		}
 		else if (m_retryWhenFails && m_offline && Time.realtimeSinceStartup >= m_fetchStartTime + m_retryDelaySecs)
 		{
-			m_downloader.m_WWW = new WWW(m_downloader.m_url);
+			m_downloader.m_WWW = WWWResult.Get(m_downloader.m_url);
 			m_fetchingData = true;
 			m_fetchStartTime = Time.realtimeSinceStartup;
 			Debug.Log("WWWRequest retry " + m_downloader.m_url);

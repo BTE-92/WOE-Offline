@@ -33,7 +33,18 @@ public class Screenshot : MonoBehaviour
 			m_screenshotTexture.ReadPixels(source, 0, 0);
 			m_screenshotTexture.Apply();
 			TextureScale.Bilinear(m_screenshotTexture, 512, 512);
-			Server.SaveScreenshot(PsState.m_lastDownloadedLevelId, m_screenshotTexture.EncodeToPNG(), ScreenshotOK, ScreenshotFAIL);
+			byte[] png = m_screenshotTexture.EncodeToPNG();
+			if (PsState.m_lastDownloadedLevelId != null)
+			{
+				PsState.m_pendingScreenshotPng = null;
+				PsState.m_pendingScreenshotLevel = null;
+				Server.SaveScreenshot(PsState.m_lastDownloadedLevelId, png, ScreenshotOK, ScreenshotFAIL);
+			}
+			else
+			{
+				PsState.m_pendingScreenshotPng = png;
+				PsState.m_pendingScreenshotLevel = LevelManager.m_currentLevel;
+			}
 		}
 	}
 

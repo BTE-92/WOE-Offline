@@ -49,6 +49,7 @@ public class EditorPublishState : BasicState
 		if (ClientTools.ServerResponseOk(dictionary))
 		{
 			(LevelManager.m_currentLevel as Minigame).m_minigameId = (string)dictionary["id"];
+			PsState.FlushPendingScreenshot((string)dictionary["id"]);
 			Debug.Log("MINIGAME SAVED");
 		}
 		else

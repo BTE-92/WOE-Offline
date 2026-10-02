@@ -82,11 +82,8 @@ public class EditorScene : IScene, IStatedObject
 	{
 		PsState.m_gameEnded = true;
 		Main.m_currentGame.m_currentScene.m_stateMachine.ChangeState(new EditorTestEndState());
-		if (PsState.m_lastDownloadedLevelId != null)
-		{
-			Screenshot component = CameraS.m_mainCamera.gameObject.GetComponent<Screenshot>();
-			component.TakeScreenshot();
-		}
+		Screenshot component = CameraS.m_mainCamera.gameObject.GetComponent<Screenshot>();
+		component.TakeScreenshot();
 	}
 
 	public static void LoseGame()

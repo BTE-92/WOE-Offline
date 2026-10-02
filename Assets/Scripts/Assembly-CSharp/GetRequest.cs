@@ -7,7 +7,7 @@ public class GetRequest : WWWRequest
 		m_url = _url;
 		m_tag = _tag;
 		m_destroyAfterDone = _destroyAfterDone;
-		m_WWW = new WWW(m_url);
+		m_WWW = WWWResult.Get(m_url);
 		startRequest(_retryAfterFail, _retryDelaySecs);
 	}
 }

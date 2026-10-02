@@ -26,7 +26,6 @@ public class Main : MonoBehaviour
 #endif
         Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;//For languages that use a , as a decimal seperator.
         ZipConstants.DefaultCodePage = 65001; //weird error
-        IpConfig.Load();//Added in order to make chaning server url 10x easier since this game is basically dead and youll likely be using a custom server.
 		#endregion
 		m_currentGame = new PsGame("PlaySomething", "0-0-1");
         m_currentGame.Initialize(new StartupScene("StartupScene"));

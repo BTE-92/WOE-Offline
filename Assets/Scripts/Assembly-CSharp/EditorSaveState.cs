@@ -51,6 +51,7 @@ public class EditorSaveState : BasicState
 		{
 			(LevelManager.m_currentLevel as Minigame).m_minigameId = (string)dictionary["id"];
 			PsState.m_lastDownloadedLevelId = (string)dictionary["id"];
+			PsState.FlushPendingScreenshot((string)dictionary["id"]);
 			Debug.Log("MINIGAME SAVED");
 		}
 		else
