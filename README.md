@@ -8,7 +8,7 @@ This repo contains an updated version of the existing **What On Earth 0.4.0 deco
 >
 > **Without the server, the game will not work.**
 >
-> If you are looking for a offline client [click me](https://github.com/BTE-92/WOE-Offline)
+> If you are looking for a offline client [click me](https://github.com/BTE-92/WOE-Offline) (made by [BTE](https://github.com/BTE-92))
 
 # ⚠️ Important Information Before You Start
 
