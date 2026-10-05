@@ -13,7 +13,9 @@ public static class BuildIOS
 		PlayerSettings.SplashScreen.show = false;
 		PlayerSettings.SplashScreen.showUnityLogo = false;
 		PlayerSettings.SetScriptingBackend(BuildTargetGroup.iOS, ScriptingImplementation.IL2CPP);
-		PlayerSettings.SetArchitecture(BuildTargetGroup.iOS, 1); // ARM64 only (0 = ARMv7, 1 = ARM64, 2 = Universal)
+		// WOE_IOS_ARCH: "arm64" (default), "armv7" or "universal". Which slice to BUILD is chosen later with xcodebuild ARCHS=.
+		string arch = (Environment.GetEnvironmentVariable("WOE_IOS_ARCH") ?? "arm64").ToLowerInvariant();
+		PlayerSettings.SetArchitecture(BuildTargetGroup.iOS, arch == "arm64" ? 1 : (arch == "armv7" ? 0 : 2)); // 0 = ARMv7, 1 = ARM64, 2 = Universal
 		PlayerSettings.iOS.targetOSVersionString = "9.0";
 		PlayerSettings.iOS.buildNumber = "1";
 		PlayerSettings.iOS.appleEnableAutomaticSigning = true;
@@ -64,14 +66,17 @@ public static class BuildIOS
 		{
 			File.WriteAllText(entitlements, "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n<plist version=\"1.0\">\n  <dict>\n  </dict>\n</plist>\n");
 		}
-		// The app is arm64-only: Unity leaves "armv7" in UIRequiredDeviceCapabilities, which makes new iOS versions reject it.
-		// Also drop "gamekit" (Game Center is not used).
-		string plistPath = Path.Combine(path, "Info.plist");
-		PlistDocument plist = new PlistDocument();
-		plist.ReadFromFile(plistPath);
-		PlistElementArray caps = plist.root.CreateArray("UIRequiredDeviceCapabilities");
-		caps.AddString("arm64");
-		plist.WriteToFile(plistPath);
+		// arm64-only export: Unity leaves "armv7" in UIRequiredDeviceCapabilities, which makes new iOS versions reject it.
+		// Armv7/universal exports keep Unity's default ("armv7", which 64-bit devices also satisfy).
+		if (PlayerSettings.GetArchitecture(BuildTargetGroup.iOS) == 1)
+		{
+			string plistPath = Path.Combine(path, "Info.plist");
+			PlistDocument plist = new PlistDocument();
+			plist.ReadFromFile(plistPath);
+			PlistElementArray caps = plist.root.CreateArray("UIRequiredDeviceCapabilities");
+			caps.AddString("arm64");
+			plist.WriteToFile(plistPath);
+		}
 		Console.WriteLine("POSTPROCESS: bitcode off, Chipmunk paths, audio frameworks, push/GameCenter capabilities removed");
 	}
 }
