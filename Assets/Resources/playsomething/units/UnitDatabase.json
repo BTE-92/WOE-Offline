@@ -15,7 +15,8 @@
           "Description": "This is a wacky vehicle!",
           "ResearchCost": 100,
           "ClassName": "NeppisCar",
-          "LevelRequirement": 0
+          "LevelRequirement": 0,
+          "IconImage": "item_neppis_car_icon"
         }
       },
       "CategoryType": "Player",
@@ -94,6 +95,14 @@
           "ClassName": "BigGear",
           "IconImage": "item_gear_icon",
           "LevelRequirement": 0
+        },
+        "Metal Crate": {
+          "OrderIndex": 9,
+          "Description": "A heavy metal crate.",
+          "ResearchCost": 100,
+          "ClassName": "MetalCrate",
+          "IconImage": "item_metal_crate_icon",
+          "LevelRequirement": 0
         }
       },
       "CategoryType": "Unit",
@@ -116,10 +125,56 @@
           "ClassName": "DangerPlatform",
           "IconImage": "item_danger_platform_icon",
           "LevelRequirement": 0
+        },
+        "Saw Blade": {
+          "OrderIndex": 2,
+          "Description": "Spinning saw blade. Watch out!",
+          "ResearchCost": 100,
+          "ClassName": "SawBlade",
+          "IconImage": "item_saw_blade_icon",
+          "LevelRequirement": 0
         }
       },
       "CategoryType": "Unit",
       "Description": "This stuff is DANGEROUS!"
+    },
+    "Test Objects": {
+      "Items": {
+        "Proto Box": {
+          "OrderIndex": 0,
+          "Description": "Breaks into planks when hit hard.",
+          "ResearchCost": 100,
+          "ClassName": "ProtoBox",
+          "IconImage": "item_proto_box_icon",
+          "LevelRequirement": 0
+        },
+        "Proto Ramp Curved": {
+          "OrderIndex": 1,
+          "Description": "A curved quarter-pipe ramp.",
+          "ResearchCost": 100,
+          "ClassName": "ProtoRampCurved",
+          "IconImage": "item_proto_ramp_curved_icon",
+          "LevelRequirement": 0
+        },
+        "Test Jello": {
+          "OrderIndex": 2,
+          "Description": "A wobbly soft body.",
+          "ResearchCost": 100,
+          "ClassName": "TestJello",
+          "IconImage": "item_test_jello_icon",
+          "LevelRequirement": 0
+        },
+        "Goal": {
+          "OrderIndex": 3,
+          "Description": "The goal (a second one!).",
+          "ResearchCost": 100,
+          "ClassName": "Goal",
+          "IconImage": "item_goal_icon",
+          "LevelRequirement": 0
+        }
+      },
+      "CategoryType": "Unit",
+      "Description": "Hidden and test objects"
     }
   }
 }

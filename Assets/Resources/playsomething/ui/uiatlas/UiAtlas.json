@@ -455,13 +455,69 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":29,"h":34},
 	"sourceSize": {"w":29,"h":34}
+},
+{
+	"filename": "item_neppis_car_icon.psd",
+	"frame": {"x":2,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_metal_crate_icon.psd",
+	"frame": {"x":214,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_saw_blade_icon.psd",
+	"frame": {"x":426,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_proto_box_icon.psd",
+	"frame": {"x":638,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_proto_ramp_curved_icon.psd",
+	"frame": {"x":850,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_test_jello_icon.psd",
+	"frame": {"x":1062,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
+},
+{
+	"filename": "item_goal_icon.psd",
+	"frame": {"x":1274,"y":539,"w":210,"h":200},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":210,"h":200},
+	"sourceSize": {"w":210,"h":200}
 }],
 "meta": {
 	"app": "http://www.codeandweb.com/texturepacker ",
 	"version": "1.0",
 	"image": "UiAtlasTex.png",
 	"format": "RGBA8888",
-	"size": {"w":2024,"h":537},
+	"size": {"w":2024,"h":743},
 	"scale": "0.5",
 	"smartupdate": "$TexturePacker:SmartUpdate:185fe3db437d471857c4a076c4ffa794:5a2960dfd2805c2d6acb5300dc81854a:0795606be9d50b8e65b97e336a13833e$"
 }

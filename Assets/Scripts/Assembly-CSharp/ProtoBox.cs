@@ -12,7 +12,7 @@ public class ProtoBox : Unit
 		ucpPolyShape shape = new ucpPolyShape(50f, 50f, Vector2.zero, 62.500004f, 0.25f, 0.5f, (ucpCollisionType)4);
 		m_cmb = ChipmunkProS.AddDynamicBody(transformC, shape);
 		m_cmb.customComponent = m_unitC;
-		PrefabC c = PrefabS.AddComponent(transformC, Vector3.zero, ResourceManager.GetGameObject("DynamicProps/Box"));
+		PrefabC c = PrefabS.AddComponent(transformC, Vector3.zero, ResourceManager.GetGameObject("Units/Box"));
 		PrefabS.SetCamera(c, CameraS.m_mainCamera);
 		SetBaseArmor(DamageType.Impact, 100f);
 		CreateEditorTouchArea(50f, 50f);
@@ -37,7 +37,7 @@ public class ProtoBox : Unit
 			ucpPolyShape2.layers = 16u;
 			ucpPolyShape2.group = 100u;
 			ChipmunkBodyC chipmunkBodyC = ChipmunkProS.AddDynamicBody(transformC, ucpPolyShape2);
-			PrefabC prefabC = PrefabS.AddComponent(transformC, Vector3.forward * Random.Range(-35, -50), ResourceManager.GetGameObject("DynamicProps/BoxPlank"));
+			PrefabC prefabC = PrefabS.AddComponent(transformC, Vector3.forward * Random.Range(-35, -50), ResourceManager.GetGameObject("Units/BoxPlank"));
 			PrefabS.SetCamera(prefabC, CameraS.m_mainCamera);
 			prefabC.p_gameObject.transform.localRotation = Quaternion.identity;
 			EventC eventC = EventS.AddComponent(entity, "EffectFade", EffectEventHandler, 2f, true, false, false, true);

@@ -143,6 +143,11 @@ public class EditorBaseState : BasicState
 				DefaultMinigame.Assemble();
 				m_editorMenu.CloseFileMenu();
 			}
+			else if (m_editorMenu.m_fileMenu.m_playerButton.m_hit) // WOE TEST
+			{
+				RemoveTransformGizmo();
+				Main.m_currentGame.m_sceneManager.m_currentScene.m_stateMachine.ChangeState(new EditorSelectorPlayer());
+			}
 			else if (m_editorMenu.m_fileMenu.m_saveButton.m_hit)
 			{
 				RemoveTransformGizmo();

@@ -4,6 +4,8 @@ public class UIEditorFileMenu : UIVerticalList
 
 	public UICanvas m_newButton;
 
+	public UICanvas m_playerButton; // WOE TEST: opens the player unit selector (it had no button)
+
 	public UICanvas m_saveButton;
 
 	public UICanvas m_publishButton;
@@ -31,6 +33,16 @@ public class UIEditorFileMenu : UIVerticalList
 		uIFittedSprite.SetVerticalAlign(1f);
 		UITextbox uITextbox = new UITextbox(m_newButton, false, string.Empty, "NEW", "Fonts/HurmeRegular", 0.02f, RelativeTo.ScreenShortest, true, Align.Center, Align.Middle);
 		uITextbox.SetVerticalAlign(0f);
+		// WOE TEST: PLAYER button (the "hud_icon_player" sprite and EditorSelectorPlayer already existed but nothing used them)
+		m_playerButton = new UICanvas(uIVerticalList, string.Empty, null, string.Empty);
+		m_playerButton.RemoveDrawHandler();
+		m_playerButton.SetSize(0.11f, 0.11f, RelativeTo.ScreenShortest);
+		m_playerButton.SetMargins(0.01f, RelativeTo.ScreenShortest);
+		UIFittedSprite woePlayerSprite = new UIFittedSprite(m_playerButton, false, "PlayerButton", PsState.m_uiSheet, PsState.m_uiSheet.m_atlas.GetFrame("hud_icon_player"), false);
+		woePlayerSprite.SetSize(0.06f, 0.06f, RelativeTo.ScreenShortest);
+		woePlayerSprite.SetVerticalAlign(1f);
+		UITextbox woePlayerText = new UITextbox(m_playerButton, false, string.Empty, "PLAYER", "Fonts/HurmeRegular", 0.02f, RelativeTo.ScreenShortest, true, Align.Center, Align.Middle);
+		woePlayerText.SetVerticalAlign(0f);
 		m_saveButton = new UICanvas(uIVerticalList, string.Empty, null, string.Empty);
 		m_saveButton.RemoveDrawHandler();
 		m_saveButton.SetSize(0.11f, 0.11f, RelativeTo.ScreenShortest);
